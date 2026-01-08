@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Hub Login | Celina Design</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="wrapper">
+        <div class="login-card">
+            <span class="brand-logo">Celina Design Hub</span>
+            
+            <h1>Willkommen</h1>
+            <p style="color: #666; margin-bottom: 30px;">
+                Bitte gib deinen Projektnamen ein, um auf deine Brand-Assets zuzugreifen.
+            </p>
+
+            <form id="loginForm" class="input-group">
+                <input type="text" id="clientName" placeholder="z.B. Skischule Luis" required autofocus>
+                <button type="submit">Zum Projekt</button>
+            </form>
+            
+            <p id="errorMsg" style="color: red; font-size: 0.9rem; margin-top: 15px; display: none;">
+                Ungültige Eingabe.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('loginForm');
+        
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // Verhindert normales Neuladen
+            
+            const input = document.getElementById('clientName').value;
+            
+            // --- DIE MAGIE ---
+            // 1. Alles Kleinschreiben
+            // 2. Ä, Ü, Ö ersetzen (optional, aber gut für URLs)
+            // 3. Leerzeichen durch Bindestriche ersetzen
+            // Beispiel: "Bäckerei Müller" -> "baeckerei-mueller"
+            
+            let slug = input.toLowerCase().trim();
+            slug = slug.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
+            slug = slug.replace(/[^a-z0-9]/g, '-'); // Alles was kein Buchstabe/Zahl ist wird "-"
+            slug = slug.replace(/-+/g, '-'); // Doppelte Bindestriche entfernen
+            
+            if(slug) {
+                // Weiterleitung zum Ordner
+                window.location.href = slug + "/"; 
+            }
+        });
+    </script>
+
+</body>
+</html>
