@@ -1,143 +1,307 @@
-/* style.css */
+/* style.css - FINAL POLISH */
+
+/* --- 1. FONTS --- */
+@font-face {
+    font-family: 'Boska';
+    src: url('fonts/Boska-Bold.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RedHat';
+    src: url('fonts/Red/RedHatDisplay-Light.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* --- 2. VARS --- */
 :root {
-    --bg-color: #f8f8f8;
-    --card-bg: #ffffff;
-    --text-main: #1a1a1a;
-    --text-muted: #666666;
-    --accent: #000000; /* Deine Brand Farbe */
-    --border: #e5e5e5;
+    --bg-color: #FBF9F9;
+    --text-main: #272727;
+    --accent: #923C56; /* Burgunder */
+    --pink: #D3546D;
+    --border: #272727;
+    --card-bg: #FBF9F9;
 }
 
 * { box-sizing: border-box; }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'RedHat', sans-serif;
     background-color: var(--bg-color);
     color: var(--text-main);
     margin: 0;
+    display: flex; 
+    flex-direction: column;
     min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Typografie Defaults */
+h1, h2, h3, h4 {
+    font-family: 'Boska', serif;
+    color: var(--text-main);
+    margin-top: 0;
+}
+
+a { text-decoration: none; color: inherit; transition: opacity 0.3s; }
+a:hover { opacity: 0.7; }
+img { max-width: 100%; height: auto; }
+
+
+/* --- HEADER (Startseite) --- */
+header {
+    padding: 60px 20px 40px;
+    width: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
+}
+.logo-img { height: 60px; width: auto; display: block; }
+
+/* --- MAIN (Startseite) --- */
+main {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    width: 100%; padding: 40px 10%;
 }
 
-/* Container für Startseite und Kundenseite */
-.wrapper {
-    width: 100%;
-    max-width: 900px;
-    padding: 20px;
+.split-hero {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 100px;
+    max-width: 1400px; width: 100%; align-items: center;
 }
 
-/* --- STYLES FÜR DIE STARTSEITE (LOGIN) --- */
-.login-card {
-    background: var(--card-bg);
-    padding: 60px 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-    text-align: center;
-    max-width: 450px;
-    margin: 0 auto;
-}
+.hero-text { padding-right: 20px; }
+.hero-text h1 { font-weight: bold; font-size: 5rem; line-height: 0.9; margin-bottom: 25px; }
+.hero-text h2 { color: var(--accent); font-size: 1.8rem; margin-bottom: 30px; font-weight: bold; }
+.hero-text p { font-size: 1.1rem; line-height: 1.6; color: #444; max-width: 90%; }
 
-.brand-logo {
-    font-weight: bold;
-    font-size: 1.2rem;
-    margin-bottom: 30px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    display: block;
+/* Login Wrapper */
+.login-wrapper {
+    background: var(--card-bg); padding: 60px; border-radius: 10px;
+    border: 1px solid var(--border); max-width: 500px; margin-left: auto;
+    transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease;
 }
-
-.input-group {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
+.login-wrapper h2 { text-align: center; font-size: 2.2rem; font-weight: bold; margin-bottom: 10px; transition: color 0.4s ease; }
+.input-group { margin-top: 30px; }
 input {
-    padding: 15px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font-size: 1rem;
-    outline: none;
-    transition: border-color 0.2s;
+    width: 100%; padding: 20px; border: 1px solid var(--text-main);
+    border-radius: 8px; background: transparent; font-family: 'RedHat', sans-serif;
+    font-size: 1.1rem; outline: none; transition: all 0.3s ease;
+    margin-bottom: 20px; color: var(--text-main);
 }
-
 input:focus { border-color: var(--accent); }
 
-button {
-    padding: 15px;
-    background-color: var(--accent);
-    color: white;
+/* --- GLOBAL BUTTON STYLE (Alle Buttons gleich) --- */
+button, .btn-small {
+    background-color: transparent;
     border: none;
-    border-radius: 6px;
-    font-size: 1rem;
+    color: var(--text-main);
+    font-family: 'Boska', serif;
+    font-size: 18pt; /* WUNSCH: 18pt */
+    font-weight: bold;
     cursor: pointer;
-    font-weight: 500;
-    transition: opacity 0.2s;
+    padding: 5px 0;
+    transition: all 0.3s ease;
+    display: inline-block; /* Damit Transform funktioniert */
 }
 
-button:hover { opacity: 0.9; }
-
-/* --- STYLES FÜR DIE UNTERSEITE (HUB) --- */
-.hub-grid {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 30px;
-    background: var(--card-bg);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-    min-height: 500px;
+/* Button Hover Effekt (Underline) */
+button:hover, .btn-small:hover {
+    color: var(--accent) !important;
+    background: transparent !important; /* Kein Background */
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
 }
 
-.sidebar {
-    background: #fafafa;
-    padding: 40px;
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.hint-text { text-align: center; margin-top: 20px; font-size: 0.9rem; color: #888; transition: color 0.4s ease; }
+.hint-text a { text-decoration: underline; color: var(--text-main); transition: color 0.4s ease; }
+
+/* Invertierung Login Box */
+.login-wrapper:hover, .login-wrapper:focus-within {
+    background-color: var(--text-main); border-color: var(--text-main); color: #FFFFFF;
+}
+.login-wrapper:hover h2, .login-wrapper:focus-within h2 { color: #FFFFFF; }
+.login-wrapper:hover input, .login-wrapper:focus-within input { border-color: #FFFFFF; color: #FFFFFF; }
+.login-wrapper:hover input::placeholder, .login-wrapper:focus-within input::placeholder { color: #bbbbbb; }
+.login-wrapper:hover button, .login-wrapper:focus-within button { color: #FFFFFF; }
+.login-wrapper:hover button:hover, .login-wrapper:focus-within button:hover { color: var(--pink) !important; }
+.login-wrapper:hover .hint-text, .login-wrapper:focus-within .hint-text { color: #bbbbbb; }
+.login-wrapper:hover .hint-text a, .login-wrapper:focus-within .hint-text a { color: #FFFFFF; }
+
+/* Footer */
+footer { background-color: var(--accent); color: #fff; padding: 60px 10%; margin-top: 80px; }
+.footer-content { display: flex; justify-content: space-between; align-items: flex-end; }
+.copyright { font-family: 'RedHat', sans-serif; font-size: 1.2rem; color: #fff; }
+.contact-info { font-family: 'Boska', serif; text-align: right; font-weight: bold; font-size: 1rem; line-height: 1.6; color: rgba(255,255,255, 0.9); }
+.contact-info a { color: #fff; text-decoration: underline; }
+
+/* Responsive General */
+@media (max-width: 1000px) {
+    main { padding: 40px 20px; }
+    .split-hero { grid-template-columns: 1fr; gap: 50px; text-align: center; }
+    .hero-text h1 { font-size: 3.5rem; }
+    .hero-text p { margin: 0 auto; }
+    .login-wrapper { margin: 0 auto; width: 100%; padding: 40px; }
+    .footer-content { flex-direction: column; align-items: center; gap: 30px; text-align: center; }
+    .contact-info { text-align: center; }
+}
+
+
+/* =========================================
+   PROJEKTSEITEN STYLES
+   ========================================= */
+
+.project-nav {
+    position: sticky; top: 0; z-index: 1000; background-color: var(--bg-color);
+    padding: 20px 40px; display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid transparent; transition: padding 0.3s;
+}
+.nav-side { flex: 1; display: flex; gap: 30px; align-items: center; }
+.nav-side.left { justify-content: flex-end; padding-right: 40px; }
+.nav-side.right { justify-content: flex-start; padding-left: 40px; }
+
+/* NAV PUNKTE: Boska Bold */
+.nav-link {
+    font-family: 'Boska', serif;
+    font-weight: bold;
+    font-size: 1.1rem; /* Etwas größer damit man die Schriftart erkennt */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+}
+.nav-link:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 4px; }
+
+.nav-logo { height: 40px; width: auto; }
+.burger-menu { display: none; cursor: pointer; font-size: 1.5rem; }
+.mobile-nav-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: var(--bg-color);
+    z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center;
+    transform: translateX(100%); transition: transform 0.4s ease;
+}
+.mobile-nav-overlay.open { transform: translateX(0); }
+.mobile-link { font-size: 1.5rem; margin: 15px 0; font-family: 'Boska', serif; font-weight: bold; cursor: pointer;}
+.close-menu { position: absolute; top: 20px; right: 20px; font-size: 2rem; cursor: pointer;}
+
+.project-main {
+    display: block !important; width: 100%; padding: 0 !important; margin: 0 !important; overflow-x: hidden;
+}
+
+/* Sub Hero */
+.sub-hero {
+    min-height: 60vh; padding: 80px 10%; display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center; border-bottom: 1px solid #eee;
+}
+.sub-hero-img { width: 100%; height: auto; max-height: 500px; object-fit: cover; border-radius: 8px; }
+
+/* Sections */
+.project-section { padding: 80px 10%; border-top: 1px solid #eee; width: 100%; }
+
+/* H3: Sehr viel größer */
+.section-title {
+    font-family: 'Boska', serif;
+    font-size: 5rem; /* RIESIG */
+    margin-bottom: 60px;
+    display: block;
+    font-weight: bold;
+}
+
+/* H4: Boska Bold & Burgunder */
+.sub-title {
+    font-family: 'Boska', serif;
+    font-weight: bold;
+    font-size: 2rem;
+    margin-top: 0;
+    margin-bottom: 30px;
+    color: var(--accent); /* Burgunder */
     text-align: center;
 }
 
-.client-logo-img {
-    max-width: 80%;
-    height: auto;
-    margin-bottom: 20px;
+/* Das Grid für H4 Bereiche (2 nebeneinander) */
+.content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Zwei Spalten */
+    gap: 80px;
+    margin-bottom: 60px;
+}
+.content-block {
+    text-align: center;
 }
 
-.content { padding: 40px; }
+/* Interactive Card */
+.interactive-card {
+    background: var(--card-bg); padding: 60px; border-radius: 10px; border: 1px solid var(--border);
+    max-width: 800px; margin: 0 auto; text-align: center;
+    transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+    text-decoration: none; display: block; color: var(--text-main);
+}
+.interactive-card:hover { background-color: var(--text-main); border-color: var(--text-main); color: #fff; }
+.interactive-card:hover h3 { color: #fff; }
+.interactive-card:hover p { color: #ddd; }
+/* Button in Interactive Card passt sich an */
+.interactive-card:hover button { color: #fff; }
+.interactive-card:hover button:hover { color: var(--pink) !important; }
 
-.download-item {
+/* Grids Innerhalb der Blöcke */
+.logo-display-wrapper {
+    display: flex; gap: 20px; justify-content: center; align-items: center; margin-bottom: 20px; flex-wrap: wrap;
+}
+.logo-display-img { max-width: 100%; max-height: 120px; object-fit: contain; }
+
+.download-group { display: flex; justify-content: center; gap: 30px; margin-top: 20px; }
+
+/* Color Grid */
+.color-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.color-item { text-align: center; }
+.color-swatch { width: 100%; padding-bottom: 100%; border-radius: 50%; margin-bottom: 15px; border: 1px solid #eee; }
+
+/* Font Showcase */
+.font-img { width: 100%; margin: 20px 0; border-radius: 8px; }
+
+/* Mobile Subpages */
+@media (max-width: 900px) {
+    .nav-side { display: none; }
+    .burger-menu { display: block; position: absolute; right: 20px; }
+    .project-nav { justify-content: center; }
+    .sub-hero { grid-template-columns: 1fr; padding: 40px 5%; text-align: center; }
+    .project-section { padding: 40px 5%; }
+    .content-grid { grid-template-columns: 1fr; gap: 50px; } /* Mobile alles untereinander */
+    .section-title { font-size: 3rem; text-align: center;}
+    .color-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* --- COLOR SHAPES UPDATE --- */
+.color-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    align-items: end; /* Damit sie auf einer Linie stehen */
+}
+
+.color-item {
+    text-align: center;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    padding: 20px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
+}
+
+/* Container für das SVG */
+.color-shape {
+    width: 100%;
+    max-width: 120px; /* Maximale Größe der Form */
+    height: auto;
     margin-bottom: 15px;
-    text-decoration: none;
-    color: var(--text-main);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.3s ease;
 }
 
-.download-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    border-color: var(--accent);
+.color-shape:hover {
+    transform: scale(1.05); /* Leichter Zoom beim Hover */
 }
 
-.badge {
-    background: #eee;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-@media (max-width: 700px) {
-    .hub-grid { grid-template-columns: 1fr; }
-    .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+/* Das SVG selbst erbt die Farbe vom Inline-Style */
+.color-shape svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    /* fill: currentColor; wird im HTML gesetzt */
 }
