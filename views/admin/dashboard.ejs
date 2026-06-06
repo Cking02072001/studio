@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Studio Admin</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/admin.css">
+</head>
+<body class="admin-body">
+
+  <div class="admin-shell">
+
+    <aside class="admin-sidebar">
+      <a href="/" class="admin-logo-link">
+        <img src="/Logo/CK.svg" alt="Studio" class="admin-logo">
+      </a>
+      <nav class="admin-nav">
+        <a href="/admin" class="admin-nav-link active">Kunden</a>
+        <a href="/admin/new" class="admin-nav-link">+ Neuer Kunde</a>
+      </nav>
+      <a href="/admin/logout" class="admin-logout">Abmelden</a>
+    </aside>
+
+    <main class="admin-main">
+
+      <div class="admin-topbar">
+        <h1 class="admin-page-title">Kunden</h1>
+        <a href="/admin/new" class="admin-btn-primary">+ Neuer Kunde</a>
+      </div>
+
+      <% if (saved) { %>
+      <div class="admin-toast">✓ "<%= saved %>" wurde gespeichert.</div>
+      <% } %>
+
+      <% if (clients.length === 0) { %>
+        <div class="admin-empty">
+          <p>Noch keine Kunden angelegt.</p>
+          <a href="/admin/new" class="admin-btn-primary">Ersten Kunden anlegen</a>
+        </div>
+      <% } else { %>
+        <div class="admin-client-list">
+          <% clients.forEach(function(client) { %>
+          <div class="admin-client-row">
+            <div class="admin-client-thumb">
+              <% if (client.heroImage) { %>
+                <img src="<%= client.heroImage %>" alt="">
+              <% } else { %>
+                <div class="admin-thumb-placeholder"></div>
+              <% } %>
+            </div>
+            <div class="admin-client-info">
+              <strong><%= client.name %></strong>
+              <span class="admin-client-cat"><%= client.category %></span>
+              <span class="admin-client-slug">/<%= client.slug %></span>
+            </div>
+            <div class="admin-client-actions">
+              <form method="POST" action="/admin/toggle/<%= client.slug %>" style="display:inline;">
+                <button type="submit" class="admin-btn-toggle <%= client.published ? 'published' : 'draft' %>">
+                  <%= client.published ? 'Veröffentlicht' : 'Entwurf' %>
+                </button>
+              </form>
+              <a href="/<%= client.slug %>" target="_blank" class="admin-btn-ghost">Ansehen ↗</a>
+              <a href="/admin/edit/<%= client.slug %>" class="admin-btn-ghost">Bearbeiten</a>
+              <form method="POST" action="/admin/delete/<%= client.slug %>" style="display:inline;"
+                onsubmit="return confirm('Wirklich löschen?')">
+                <button type="submit" class="admin-btn-danger">Löschen</button>
+              </form>
+            </div>
+          </div>
+          <% }); %>
+        </div>
+      <% } %>
+
+    </main>
+  </div>
+
+</body>
+</html>

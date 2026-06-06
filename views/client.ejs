@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= client.name %> | Studio</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <nav class="project-nav" id="stickyNav">
+    <div class="nav-side left" id="navLeft"></div>
+    <a href="/"><img src="/Logo/CK.svg" alt="Celina K." class="nav-logo"></a>
+    <div class="nav-side right" id="navRight"></div>
+    <div class="burger-menu" onclick="toggleMobileMenu()">☰</div>
+  </nav>
+
+  <div class="mobile-nav-overlay" id="mobileMenu">
+    <div class="close-menu" onclick="toggleMobileMenu()">×</div>
+    <div id="mobileLinksContainer"></div>
+  </div>
+
+  <main class="project-main">
+
+    <!-- Hero -->
+    <div class="sub-hero">
+      <div class="hero-text">
+        <h1><%- client.name.replace(' ', '<br>') %>.</h1>
+        <h2><%= client.category %></h2>
+        <p><%= client.description %></p>
+      </div>
+      <div class="hero-image-wrapper">
+        <% if (client.heroImage) { %>
+          <img src="<%= client.heroImage %>" alt="<%= client.name %>" class="sub-hero-img">
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Brandlook -->
+    <% if (client.brandlook && client.brandlook.pdf) { %>
+    <section class="project-section">
+      <h3 id="brandlook" class="nav-anchor section-title">Brandlook</h3>
+      <div style="text-align:center;max-width:800px;margin:0 auto;">
+        <% if (client.brandlook.description) { %>
+          <p style="font-size:1.2rem;margin-bottom:30px;line-height:1.6;"><%= client.brandlook.description %></p>
+        <% } %>
+        <a href="<%= client.brandlook.pdf %>" target="_blank" class="btn-small">Download PDF</a>
+      </div>
+    </section>
+    <% } %>
+
+    <!-- Logos -->
+    <% if (client.logos && client.logos.length > 0) { %>
+    <section class="project-section">
+      <h3 id="logos" class="nav-anchor section-title">Logos</h3>
+      <div class="content-grid">
+        <% client.logos.forEach(function(logo) { %>
+        <div class="content-block">
+          <h4 class="sub-title"><%= logo.title %></h4>
+          <% if (logo.image) { %>
+            <div class="logo-display-wrapper">
+              <img src="<%= logo.image %>" class="logo-display-img" alt="<%= logo.title %>">
+            </div>
+          <% } %>
+          <div class="download-group">
+            <% if (logo.svg) { %><a href="<%= logo.svg %>" download class="btn-small">SVG</a><% } %>
+            <% if (logo.eps) { %><a href="<%= logo.eps %>" download class="btn-small">EPS</a><% } %>
+            <% if (logo.png) { %><a href="<%= logo.png %>" download class="btn-small">PNG</a><% } %>
+          </div>
+        </div>
+        <% }); %>
+      </div>
+    </section>
+    <% } %>
+
+    <!-- Farben -->
+    <% if (client.colors && client.colors.length > 0) { %>
+    <section class="project-section">
+      <h3 id="farben" class="nav-anchor section-title">Farben</h3>
+      <div class="color-grid">
+        <% client.colors.forEach(function(color) { %>
+        <div class="color-item">
+          <div class="color-shape" style="color:<%= color.hex %>;">
+            <svg viewBox="0 0 232 232" fill="currentColor">
+              <path d="M115.929 231.858C179.955 231.858 231.858 200.58 231.858 139.115C231.858 77.65 160.633 0 115.929 0C71.2247 0 0 77.65 0 139.115C0 200.58 51.9032 231.858 115.929 231.858Z"
+                <% if (color.hex.toLowerCase() === '#ffffff' || color.hex.toLowerCase() === '#fff' || color.hex.toLowerCase() === '#fbf9f9') { %>stroke="#ddd" stroke-width="4"<% } %> />
+            </svg>
+          </div>
+          <span class="color-value"><%= color.hex %></span>
+          <% if (color.name) { %><span style="font-size:0.8rem;color:#888;margin-top:4px;display:block;"><%= color.name %></span><% } %>
+        </div>
+        <% }); %>
+      </div>
+    </section>
+    <% } %>
+
+    <!-- Schriften -->
+    <% if (client.fonts && client.fonts.length > 0) { %>
+    <section class="project-section">
+      <h3 id="schriften" class="nav-anchor section-title">Schriften</h3>
+      <div class="content-grid">
+        <% client.fonts.forEach(function(font) { %>
+        <div class="content-block" style="text-align:left;">
+          <h4 class="sub-title" style="text-align:left;"><%= font.name %></h4>
+          <% if (font.description) { %><p><%= font.description %></p><% } %>
+          <% if (font.preview) { %><img src="<%= font.preview %>" class="font-img" alt="<%= font.name %>"><% } %>
+          <% if (font.foundryUrl) { %><a href="<%= font.foundryUrl %>" target="_blank" class="btn-small">Zur Foundry</a><% } %>
+        </div>
+        <% }); %>
+      </div>
+    </section>
+    <% } %>
+
+    <!-- Weiteres -->
+    <% if (client.downloads && client.downloads.length > 0) { %>
+    <section class="project-section" style="border-bottom:none;">
+      <h3 id="weiteres" class="nav-anchor section-title">Weiteres</h3>
+      <div class="content-grid">
+        <% client.downloads.forEach(function(dl) { %>
+        <div class="content-block">
+          <h4 class="sub-title"><%= dl.title %></h4>
+          <% if (dl.file) { %><a href="<%= dl.file %>" download class="btn-small">Download</a><% } %>
+        </div>
+        <% }); %>
+      </div>
+    </section>
+    <% } %>
+
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="copyright">&copy; Celina Kammerhofer 2026</div>
+      <div class="contact-info">
+        Celina Kammerhofer<br>Mandarfen 81, 6481 St. Leonhard<br>Austria<br>
+        <a href="mailto:hi@celina.design">hi@celina.design</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const sections = document.querySelectorAll('.nav-anchor');
+    const navLeft = document.getElementById('navLeft');
+    const navRight = document.getElementById('navRight');
+    const mobileContainer = document.getElementById('mobileLinksContainer');
+
+    sections.forEach((section, index) => {
+      const link = document.createElement('a');
+      link.href = '#' + section.id;
+      link.className = 'nav-link';
+      link.innerText = section.innerText;
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        document.getElementById(section.id).scrollIntoView({ behavior: 'smooth' });
+        toggleMobileMenu(false);
+      });
+      (index < 3 ? navLeft : navRight).appendChild(link);
+
+      const ml = link.cloneNode(true);
+      ml.className = 'mobile-link';
+      ml.addEventListener('click', e => {
+        e.preventDefault();
+        document.getElementById(section.id).scrollIntoView({ behavior: 'smooth' });
+        toggleMobileMenu();
+      });
+      mobileContainer.appendChild(ml);
+    });
+
+    function toggleMobileMenu(forceClose) {
+      const menu = document.getElementById('mobileMenu');
+      if (forceClose === false) menu.classList.remove('open');
+      else menu.classList.toggle('open');
+    }
+  </script>
+
+</body>
+</html>

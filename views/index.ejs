@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Studio | Celina Kammerhofer</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <header>
+    <a href="https://celina.design">
+      <img src="/Logo/CK.svg" alt="Celina Kammerhofer" class="logo-img">
+    </a>
+  </header>
+
+  <main class="studio-main">
+
+    <div class="studio-hero">
+      <div class="studio-hero-left">
+        <span class="studio-eyebrow">Brand Studio</span>
+        <h1>Marken.<br>Systeme.<br>Assets.</h1>
+      </div>
+      <div class="studio-hero-right">
+        <p>
+          Alle Design-Ressourcen zu deiner visuellen Identität —
+          Logos, Farben, Schriften und Guidelines,
+          gesammelt und bereit zum Einsatz.
+        </p>
+        <p class="studio-hint">
+          Du hast keinen Link zu deinem Projekt?<br>
+          Schreib mir eine <a href="mailto:hi@celina.design">E-Mail</a>.
+        </p>
+      </div>
+    </div>
+
+    <% if (clients.length > 0) { %>
+    <div class="projects-grid">
+      <% clients.forEach(function(client) { %>
+      <a href="/<%= client.slug %>" class="project-card">
+        <div class="card-image">
+          <% if (client.heroImage) { %>
+            <img src="<%= client.heroImage %>" alt="<%= client.name %>">
+          <% } else { %>
+            <div style="width:100%;height:100%;background:#f0eeee;"></div>
+          <% } %>
+        </div>
+        <div class="card-info">
+          <div class="card-text">
+            <h3><%= client.name %></h3>
+            <span class="card-category"><%= client.category %></span>
+          </div>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+      <% }); %>
+    </div>
+    <% } %>
+
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="copyright">&copy; Celina Kammerhofer 2026</div>
+      <div class="contact-info">
+        Celina Kammerhofer<br>
+        Mandarfen 81, 6481 St. Leonhard<br>
+        Austria<br>
+        <a href="mailto:hi@celina.design">hi@celina.design</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

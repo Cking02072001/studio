@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= client ? 'Bearbeiten' : 'Neuer Kunde' %> | Studio Admin</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/admin.css">
+</head>
+<body class="admin-body">
+
+<div class="admin-shell">
+
+  <aside class="admin-sidebar">
+    <a href="/" class="admin-logo-link">
+      <img src="/Logo/CK.svg" alt="Studio" class="admin-logo">
+    </a>
+    <nav class="admin-nav">
+      <a href="/admin" class="admin-nav-link">← Zurück</a>
+    </nav>
+    <a href="/admin/logout" class="admin-logout">Abmelden</a>
+  </aside>
+
+  <main class="admin-main">
+
+    <div class="admin-topbar">
+      <h1 class="admin-page-title"><%= client ? client.name : 'Neuer Kunde' %></h1>
+      <button id="saveBtn" class="admin-btn-primary" onclick="saveClient()">Speichern</button>
+    </div>
+
+    <p id="saveStatus" class="admin-save-status"></p>
+
+    <!-- Hidden fields -->
+    <input type="hidden" id="originalSlug" value="<%= client ? client.slug : '' %>">
+
+    <!-- ─── BASICS ─── -->
+    <div class="admin-card">
+      <h2 class="admin-card-title">Basis</h2>
+      <div class="admin-fields">
+        <div class="admin-field">
+          <label>Name</label>
+          <input type="text" id="name" placeholder="z.B. Martina Nußbaum"
+            value="<%= client ? client.name : '' %>" oninput="autoSlug()">
+        </div>
+        <div class="admin-field">
+          <label>URL-Slug <span class="admin-label-hint">(wird auto-generiert)</span></label>
+          <div class="admin-slug-row">
+            <span class="admin-slug-prefix">studio.celina.design/</span>
+            <input type="text" id="slug" placeholder="martina-nussbaum"
+              value="<%= client ? client.slug : '' %>">
+          </div>
+        </div>
+        <div class="admin-field">
+          <label>Kategorie</label>
+          <input type="text" id="category" placeholder="z.B. Visual Identity"
+            value="<%= client ? client.category : '' %>">
+        </div>
+        <div class="admin-field admin-field-full">
+          <label>Kurzbeschreibung</label>
+          <textarea id="description" rows="3" placeholder="Kurze Beschreibung des Projekts..."><%= client ? client.description : '' %></textarea>
+        </div>
+        <div class="admin-field">
+          <label class="admin-toggle-label">
+            <input type="checkbox" id="published" <%= (client && client.published) ? 'checked' : '' %>>
+            <span>Veröffentlicht</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── HERO BILD ─── -->
+    <div class="admin-card">
+      <h2 class="admin-card-title">Hero Bild</h2>
+      <div class="admin-upload-zone" id="heroZone" onclick="pickFile('heroImage', 'heroZone', 'image')">
+        <% if (client && client.heroImage) { %>
+          <img src="<%= client.heroImage %>" class="admin-upload-preview">
+        <% } else { %>
+          <div class="admin-upload-placeholder">
+            <span>Klicken zum Hochladen</span>
+            <small>JPG, PNG, WebP</small>
+          </div>
+        <% } %>
+      </div>
+      <input type="hidden" id="heroImage" value="<%= client ? client.heroImage : '' %>">
+    </div>
+
+    <!-- ─── BRANDLOOK ─── -->
+    <div class="admin-card">
+      <h2 class="admin-card-title">Brandlook <span class="admin-card-subtitle">PDF-Brandbook</span></h2>
+      <div class="admin-fields">
+        <div class="admin-field admin-field-full">
+          <label>Beschreibung</label>
+          <textarea id="brandlookDescription" rows="2"
+            placeholder="Das vollständige Brandbook mit allen Regeln..."><%= client && client.brandlook ? client.brandlook.description : '' %></textarea>
+        </div>
+        <div class="admin-field admin-field-full">
+          <label>PDF-Datei</label>
+          <div class="admin-upload-zone admin-upload-zone-sm" id="brandlookPdfZone"
+            onclick="pickFile('brandlookPdf', 'brandlookPdfZone', 'pdf')">
+            <% if (client && client.brandlook && client.brandlook.pdf) { %>
+              <div class="admin-file-pill">📄 <%= client.brandlook.pdf.split('/').pop() %></div>
+            <% } else { %>
+              <div class="admin-upload-placeholder"><span>PDF hochladen</span></div>
+            <% } %>
+          </div>
+          <input type="hidden" id="brandlookPdf" value="<%= client && client.brandlook ? client.brandlook.pdf : '' %>">
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── LOGOS ─── -->
+    <div class="admin-card">
+      <h2 class="admin-card-title">Logos</h2>
+      <div id="logosContainer"></div>
+      <button type="button" class="admin-btn-add" onclick="addLogo()">+ Logo hinzufügen</button>
+    </div>
+
+    <!-- ─── FARBEN ─── -->
+    <div class="admin-card">
+      <h2 class="admin-card-title">Farben</h2>
+      <div id="colorsContainer" class="admin-colors-grid"></div>
+      <button type="button" class="admin-btn-add" onclick="addColor()">+ Farbe hinzufügen</button>
+    </div>
+
+    <!-- ─── SCHRIFTEN ─── -->
+    <div class="admin-card">
+      <h2 class="admin-card-title">Schriften</h2>
+      <div id="fontsContainer"></div>
+      <button type="button" class="admin-btn-add" onclick="addFont()">+ Schrift hinzufügen</button>
+    </div>
+
+    <!-- ─── WEITERES ─── -->
+    <div class="admin-card">
+      <h2 class="admin-card-title">Weiteres <span class="admin-card-subtitle">Downloads, Icons, Muster</span></h2>
+      <div id="downloadsContainer"></div>
+      <button type="button" class="admin-btn-add" onclick="addDownload()">+ Download hinzufügen</button>
+    </div>
+
+    <div style="padding:0 0 60px;">
+      <button class="admin-btn-primary admin-btn-lg" onclick="saveClient()">Speichern</button>
+    </div>
+
+  </main>
+</div>
+
+<!-- Hidden file input -->
+<input type="file" id="fileInput" style="display:none" onchange="handleFileSelected()">
+
+<script>
+// ─── Existing data ───
+const existingData = <%- JSON.stringify(client || null) %>;
+let currentFileTarget = null;
+let currentZoneId = null;
+let currentFileType = null;
+
+// ─── Init ───
+window.addEventListener('DOMContentLoaded', () => {
+  if (existingData) {
+    (existingData.logos || []).forEach(l => addLogo(l));
+    (existingData.colors || []).forEach(c => addColor(c));
+    (existingData.fonts || []).forEach(f => addFont(f));
+    (existingData.downloads || []).forEach(d => addDownload(d));
+  }
+  document.getElementById('name').focus();
+});
+
+// ─── Auto-slug ───
+function autoSlug() {
+  const name = document.getElementById('name').value;
+  const slug = document.getElementById('slug');
+  if (!existingData) {
+    slug.value = name.toLowerCase()
+      .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
+      .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  }
+}
+
+// ─── File Upload ───
+function pickFile(fieldId, zoneId, type) {
+  currentFileTarget = fieldId;
+  currentZoneId = zoneId;
+  currentFileType = type;
+  const accept = type === 'image' ? 'image/*' :
+                 type === 'pdf' ? '.pdf' :
+                 type === 'svg' ? '.svg,.eps,.pdf,.zip,image/*' : '*';
+  document.getElementById('fileInput').accept = accept;
+  document.getElementById('fileInput').click();
+}
+
+async function handleFileSelected() {
+  const file = document.getElementById('fileInput').files[0];
+  if (!file) return;
+
+  const zone = document.getElementById(currentZoneId);
+  zone.classList.add('admin-upload-loading');
+  zone.innerHTML = '<div class="admin-upload-placeholder"><span>Lädt...</span></div>';
+
+  const form = new FormData();
+  form.append('file', file);
+
+  try {
+    const res = await fetch('/admin/upload', { method: 'POST', body: form });
+    const data = await res.json();
+    if (data.path) {
+      document.getElementById(currentFileTarget).value = data.path;
+      if (currentFileType === 'image') {
+        zone.innerHTML = `<img src="${data.path}" class="admin-upload-preview">`;
+      } else {
+        zone.innerHTML = `<div class="admin-file-pill">📄 ${file.name}</div>`;
+      }
+    }
+  } catch(e) {
+    zone.innerHTML = '<div class="admin-upload-placeholder" style="color:red"><span>Fehler beim Upload</span></div>';
+  }
+  zone.classList.remove('admin-upload-loading');
+  document.getElementById('fileInput').value = '';
+}
+
+// ─── Logos ───
+let logoCount = 0;
+function addLogo(data = {}) {
+  const i = logoCount++;
+  const el = document.createElement('div');
+  el.className = 'admin-logo-item';
+  el.dataset.index = i;
+  el.innerHTML = `
+    <div class="admin-logo-item-header">
+      <input type="text" placeholder="Titel (z.B. Hauptlogo)" class="logo-title" value="${data.title || ''}">
+      <button type="button" class="admin-btn-remove" onclick="this.closest('.admin-logo-item').remove()">Entfernen</button>
+    </div>
+    <div class="admin-logo-item-body">
+      <div>
+        <label class="admin-label-sm">Vorschau (PNG/SVG)</label>
+        <div class="admin-upload-zone admin-upload-zone-sm" id="logoImg_${i}"
+          onclick="pickFile('logoImgVal_${i}', 'logoImg_${i}', 'image')">
+          ${data.image
+            ? `<img src="${data.image}" class="admin-upload-preview">`
+            : '<div class="admin-upload-placeholder"><span>Bild hochladen</span></div>'}
+        </div>
+        <input type="hidden" id="logoImgVal_${i}" value="${data.image || ''}">
+      </div>
+      <div class="admin-logo-files">
+        <div>
+          <label class="admin-label-sm">SVG</label>
+          <div class="admin-upload-zone admin-upload-zone-xs" id="logoSvg_${i}"
+            onclick="pickFile('logoSvgVal_${i}', 'logoSvg_${i}', 'svg')">
+            ${data.svg ? `<div class="admin-file-pill">📄 SVG</div>` : '<span class="admin-upload-sm-text">hochladen</span>'}
+          </div>
+          <input type="hidden" id="logoSvgVal_${i}" value="${data.svg || ''}">
+        </div>
+        <div>
+          <label class="admin-label-sm">EPS</label>
+          <div class="admin-upload-zone admin-upload-zone-xs" id="logoEps_${i}"
+            onclick="pickFile('logoEpsVal_${i}', 'logoEps_${i}', 'svg')">
+            ${data.eps ? `<div class="admin-file-pill">📄 EPS</div>` : '<span class="admin-upload-sm-text">hochladen</span>'}
+          </div>
+          <input type="hidden" id="logoEpsVal_${i}" value="${data.eps || ''}">
+        </div>
+        <div>
+          <label class="admin-label-sm">PNG</label>
+          <div class="admin-upload-zone admin-upload-zone-xs" id="logoPng_${i}"
+            onclick="pickFile('logoPngVal_${i}', 'logoPng_${i}', 'image')">
+            ${data.png ? `<div class="admin-file-pill">📄 PNG</div>` : '<span class="admin-upload-sm-text">hochladen</span>'}
+          </div>
+          <input type="hidden" id="logoPngVal_${i}" value="${data.png || ''}">
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('logosContainer').appendChild(el);
+}
+
+function collectLogos() {
+  return [...document.querySelectorAll('.admin-logo-item')].map(el => {
+    const i = el.dataset.index;
+    return {
+      title: el.querySelector('.logo-title').value,
+      image: document.getElementById(`logoImgVal_${i}`).value,
+      svg:   document.getElementById(`logoSvgVal_${i}`).value,
+      eps:   document.getElementById(`logoEpsVal_${i}`).value,
+      png:   document.getElementById(`logoPngVal_${i}`).value,
+    };
+  }).filter(l => l.title || l.image);
+}
+
+// ─── Colors ───
+function addColor(data = {}) {
+  const el = document.createElement('div');
+  el.className = 'admin-color-item';
+  const hex = data.hex || '#000000';
+  el.innerHTML = `
+    <input type="color" class="color-picker" value="${hex}" oninput="syncHex(this)">
+    <input type="text" class="color-hex" value="${hex}" maxlength="7"
+      oninput="syncPicker(this)" placeholder="#000000">
+    <input type="text" class="color-name" value="${data.name || ''}" placeholder="Name (opt.)">
+    <button type="button" class="admin-btn-remove-sm" onclick="this.closest('.admin-color-item').remove()">×</button>`;
+  document.getElementById('colorsContainer').appendChild(el);
+}
+
+function syncHex(picker) {
+  picker.nextElementSibling.value = picker.value;
+}
+function syncPicker(input) {
+  if (/^#[0-9a-fA-F]{6}$/.test(input.value)) {
+    input.previousElementSibling.value = input.value;
+  }
+}
+
+function collectColors() {
+  return [...document.querySelectorAll('.admin-color-item')].map(el => ({
+    hex: el.querySelector('.color-hex').value,
+    name: el.querySelector('.color-name').value,
+  })).filter(c => c.hex);
+}
+
+// ─── Fonts ───
+let fontCount = 0;
+function addFont(data = {}) {
+  const i = fontCount++;
+  const el = document.createElement('div');
+  el.className = 'admin-font-item';
+  el.dataset.index = i;
+  el.innerHTML = `
+    <div class="admin-logo-item-header">
+      <input type="text" placeholder="Schriftname" class="font-name" value="${data.name || ''}">
+      <button type="button" class="admin-btn-remove" onclick="this.closest('.admin-font-item').remove()">Entfernen</button>
+    </div>
+    <div class="admin-fields" style="margin-top:12px;">
+      <div class="admin-field">
+        <label class="admin-label-sm">Beschreibung</label>
+        <input type="text" class="font-desc" placeholder="z.B. Primäre Schrift für Headlines" value="${data.description || ''}">
+      </div>
+      <div class="admin-field">
+        <label class="admin-label-sm">Foundry URL</label>
+        <input type="url" class="font-url" placeholder="https://..." value="${data.foundryUrl || ''}">
+      </div>
+      <div class="admin-field admin-field-full">
+        <label class="admin-label-sm">Vorschau-Bild</label>
+        <div class="admin-upload-zone admin-upload-zone-sm" id="fontPrev_${i}"
+          onclick="pickFile('fontPrevVal_${i}', 'fontPrev_${i}', 'image')">
+          ${data.preview
+            ? `<img src="${data.preview}" class="admin-upload-preview">`
+            : '<div class="admin-upload-placeholder"><span>Bild hochladen</span></div>'}
+        </div>
+        <input type="hidden" id="fontPrevVal_${i}" value="${data.preview || ''}">
+      </div>
+    </div>`;
+  document.getElementById('fontsContainer').appendChild(el);
+}
+
+function collectFonts() {
+  return [...document.querySelectorAll('.admin-font-item')].map(el => {
+    const i = el.dataset.index;
+    return {
+      name: el.querySelector('.font-name').value,
+      description: el.querySelector('.font-desc').value,
+      foundryUrl: el.querySelector('.font-url').value,
+      preview: document.getElementById(`fontPrevVal_${i}`).value,
+    };
+  }).filter(f => f.name);
+}
+
+// ─── Downloads ───
+let dlCount = 0;
+function addDownload(data = {}) {
+  const i = dlCount++;
+  const el = document.createElement('div');
+  el.className = 'admin-dl-item';
+  el.dataset.index = i;
+  el.innerHTML = `
+    <div class="admin-logo-item-header">
+      <input type="text" placeholder="Titel (z.B. Iconset, Muster...)" class="dl-title" value="${data.title || ''}">
+      <button type="button" class="admin-btn-remove" onclick="this.closest('.admin-dl-item').remove()">Entfernen</button>
+    </div>
+    <div class="admin-upload-zone admin-upload-zone-sm" style="margin-top:10px;" id="dlFile_${i}"
+      onclick="pickFile('dlFileVal_${i}', 'dlFile_${i}', 'svg')">
+      ${data.file
+        ? `<div class="admin-file-pill">📄 ${data.file.split('/').pop()}</div>`
+        : '<div class="admin-upload-placeholder"><span>Datei hochladen</span></div>'}
+    </div>
+    <input type="hidden" id="dlFileVal_${i}" value="${data.file || ''}">`;
+  document.getElementById('downloadsContainer').appendChild(el);
+}
+
+function collectDownloads() {
+  return [...document.querySelectorAll('.admin-dl-item')].map(el => {
+    const i = el.dataset.index;
+    return {
+      title: el.querySelector('.dl-title').value,
+      file: document.getElementById(`dlFileVal_${i}`).value,
+    };
+  }).filter(d => d.title);
+}
+
+// ─── Save ───
+async function saveClient() {
+  const btn = document.getElementById('saveBtn');
+  const status = document.getElementById('saveStatus');
+  btn.disabled = true;
+  btn.textContent = 'Speichert...';
+
+  const payload = {
+    _originalSlug: document.getElementById('originalSlug').value || null,
+    name: document.getElementById('name').value.trim(),
+    slug: document.getElementById('slug').value.trim(),
+    category: document.getElementById('category').value.trim(),
+    description: document.getElementById('description').value.trim(),
+    published: document.getElementById('published').checked,
+    heroImage: document.getElementById('heroImage').value,
+    brandlookDescription: document.getElementById('brandlookDescription').value.trim(),
+    brandlookPdf: document.getElementById('brandlookPdf').value,
+    logos: collectLogos(),
+    colors: collectColors(),
+    fonts: collectFonts(),
+    downloads: collectDownloads(),
+  };
+
+  if (!payload.name) {
+    status.textContent = 'Bitte einen Namen eingeben.';
+    status.className = 'admin-save-status error';
+    btn.disabled = false;
+    btn.textContent = 'Speichern';
+    return;
+  }
+
+  try {
+    const res = await fetch('/admin/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (data.success) {
+      window.location.href = `/admin?saved=${encodeURIComponent(payload.name)}`;
+    } else {
+      status.textContent = data.error || 'Fehler beim Speichern.';
+      status.className = 'admin-save-status error';
+    }
+  } catch(e) {
+    status.textContent = 'Netzwerkfehler.';
+    status.className = 'admin-save-status error';
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Speichern';
+}
+</script>
+
+</body>
+</html>

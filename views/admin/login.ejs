@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | Studio</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/admin.css">
+</head>
+<body class="admin-body">
+
+  <div class="admin-login-wrap">
+    <a href="/" class="admin-logo-link">
+      <img src="/Logo/CK.svg" alt="Studio" class="admin-logo">
+    </a>
+    <h1 class="admin-login-title">Admin</h1>
+    <% if (error) { %>
+      <p class="admin-error"><%= error %></p>
+    <% } %>
+    <form method="POST" action="/admin/login" class="admin-login-form">
+      <input type="password" name="password" placeholder="Passwort" autofocus required>
+      <button type="submit">Anmelden</button>
+    </form>
+  </div>
+
+</body>
+</html>

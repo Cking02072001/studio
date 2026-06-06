@@ -3,14 +3,14 @@
 /* --- 1. FONTS --- */
 @font-face {
     font-family: 'Boska';
-    src: url('fonts/Boska-Bold.otf') format('opentype');
+    src: url('/fonts/Boska/Boska-Bold.otf') format('opentype');
     font-weight: bold;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'RedHat';
-    src: url('fonts/Red/RedHatDisplay-Light.ttf') format('truetype');
+    src: url('/fonts/Red/RedHatDisplay-Light.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -145,6 +145,203 @@ footer { background-color: var(--accent); color: #fff; padding: 60px 10%; margin
     .login-wrapper { margin: 0 auto; width: 100%; padding: 40px; }
     .footer-content { flex-direction: column; align-items: center; gap: 30px; text-align: center; }
     .contact-info { text-align: center; }
+}
+
+
+/* =========================================
+   STUDIO STARTSEITE
+   ========================================= */
+
+.studio-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Studio Hero (Split) */
+.studio-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    padding: 60px 10% 80px;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    align-items: end;
+    box-sizing: border-box;
+}
+
+.studio-eyebrow {
+    display: block;
+    font-family: 'RedHat', sans-serif;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 20px;
+}
+
+.studio-hero-left h1 {
+    font-size: 5.5rem;
+    line-height: 0.95;
+    margin: 0;
+}
+
+.studio-hero-right {
+    padding-bottom: 8px;
+}
+
+.studio-hero-right p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #555;
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+.studio-hint {
+    font-size: 0.9rem !important;
+    color: #999 !important;
+    line-height: 1.6 !important;
+}
+
+.studio-hint a {
+    color: var(--text-main);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* Divider line between intro and grid */
+.studio-main::before {
+    content: '';
+    display: block;
+    height: 1px;
+    background: #e5e5e5;
+    margin: 0 10%;
+}
+
+/* Projects Grid */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 2px;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    border-top: 1px solid #e5e5e5;
+}
+
+/* Project Card */
+.project-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: var(--text-main);
+    background: var(--card-bg);
+    border-right: 1px solid #e5e5e5;
+    transition: background-color 0.35s ease, color 0.35s ease;
+    overflow: hidden;
+}
+
+.project-card:last-child {
+    border-right: none;
+}
+
+.project-card:hover {
+    opacity: 1;
+    background-color: var(--text-main);
+    color: #fff;
+}
+
+.card-image {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: #f0eeee;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    display: block;
+}
+
+.project-card:hover .card-image img {
+    transform: scale(1.04);
+}
+
+.card-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 30px;
+    border-top: 1px solid #e5e5e5;
+    transition: border-color 0.35s ease;
+}
+
+.project-card:hover .card-info {
+    border-color: #444;
+}
+
+.card-info h3 {
+    font-family: 'Boska', serif;
+    font-weight: bold;
+    font-size: 1.4rem;
+    margin: 0 0 5px 0;
+    color: inherit;
+    transition: color 0.35s ease;
+}
+
+.card-category {
+    font-family: 'RedHat', sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    transition: color 0.35s ease;
+}
+
+.project-card:hover .card-category {
+    color: rgba(255,255,255,0.6);
+}
+
+.card-arrow {
+    font-size: 1.4rem;
+    color: inherit;
+    transition: transform 0.3s ease, color 0.35s ease;
+    flex-shrink: 0;
+}
+
+.project-card:hover .card-arrow {
+    transform: translateX(5px);
+}
+
+/* Studio Responsive */
+@media (max-width: 1100px) {
+    .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 750px) {
+    .studio-hero {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 40px 6% 60px;
+    }
+    .studio-hero-left h1 {
+        font-size: 3.5rem;
+    }
+    .projects-grid {
+        grid-template-columns: 1fr;
+        border-top: none;
+    }
+    .project-card {
+        border-right: none;
+        border-top: 1px solid #e5e5e5;
+    }
 }
 
 

@@ -1,0 +1,19 @@
+[
+  {
+    "slug": "test",
+    "name": "Test",
+    "category": "TEst",
+    "description": "test",
+    "heroImage": "/uploads/1780754839198-image-1780752255574.png",
+    "published": true,
+    "brandlook": {
+      "description": "",
+      "pdf": ""
+    },
+    "logos": [],
+    "colors": [],
+    "fonts": [],
+    "downloads": [],
+    "updatedAt": "2026-06-06"
+  }
+]
