@@ -141,10 +141,12 @@ app.post('/admin/save', requireAuth, (req, res) => {
       description: data.brandlookDescription || '',
       pdf: data.brandlookPdf || ''
     },
+    password: data.password || '',
     logos: Array.isArray(data.logos) ? data.logos : [],
     colors: Array.isArray(data.colors) ? data.colors : [],
     fonts: Array.isArray(data.fonts) ? data.fonts : [],
     downloads: Array.isArray(data.downloads) ? data.downloads : [],
+    applications: Array.isArray(data.applications) ? data.applications : [],
     updatedAt: new Date().toISOString().split('T')[0]
   };
 
@@ -179,15 +181,37 @@ app.post('/admin/delete/:slug', requireAuth, (req, res) => {
 // CLIENT PAGE (last!)
 // =====================
 
+// Password auth for protected pages
+app.get('/:slug/auth', (req, res) => {
+  const client = loadClients().find(c => c.slug === req.params.slug);
+  if (!client || !client.published) return res.status(404).render('404');
+  if (!client.password) return res.redirect(`/${client.slug}`);
+  if (req.session[`access_${client.slug}`]) return res.redirect(`/${client.slug}`);
+  res.render('client-auth', { client, error: null });
+});
+
+app.post('/:slug/auth', (req, res) => {
+  const client = loadClients().find(c => c.slug === req.params.slug);
+  if (!client || !client.published) return res.status(404).render('404');
+  if (req.body.password === client.password) {
+    req.session[`access_${client.slug}`] = true;
+    return res.redirect(`/${client.slug}`);
+  }
+  res.render('client-auth', { client, error: 'Falsches Passwort.' });
+});
+
 app.get('/:slug', (req, res) => {
-  // Protect admin from being caught here
   if (req.params.slug === 'admin') return res.redirect('/admin');
 
   const clients = loadClients();
   const client = clients.find(c => c.slug === req.params.slug);
-  if (!client || !client.published) {
-    return res.status(404).render('404');
+  if (!client || !client.published) return res.status(404).render('404');
+
+  // Check password protection
+  if (client.password && !req.session[`access_${client.slug}`]) {
+    return res.redirect(`/${client.slug}/auth`);
   }
+
   res.render('client', { client });
 });
 

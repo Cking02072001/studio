@@ -65,6 +65,11 @@
             <span>Veröffentlicht</span>
           </label>
         </div>
+        <div class="admin-field">
+          <label>Passwortschutz <span class="admin-label-hint">(leer = öffentlich)</span></label>
+          <input type="text" id="password" placeholder="z.B. design2026"
+            value="<%= client ? (client.password || '') : '' %>">
+        </div>
       </div>
     </div>
 
@@ -129,6 +134,13 @@
       <button type="button" class="admin-btn-add" onclick="addFont()">+ Schrift hinzufügen</button>
     </div>
 
+    <!-- ─── ANWENDUNGEN ─── -->
+    <div class="admin-card">
+      <h2 class="admin-card-title">Anwendungsbeispiele <span class="admin-card-subtitle">Mockups, Prints, Social Media</span></h2>
+      <div id="applicationsContainer" class="admin-applications-grid"></div>
+      <button type="button" class="admin-btn-add" onclick="addApplication()">+ Bild hinzufügen</button>
+    </div>
+
     <!-- ─── WEITERES ─── -->
     <div class="admin-card">
       <h2 class="admin-card-title">Weiteres <span class="admin-card-subtitle">Downloads, Icons, Muster</span></h2>
@@ -160,6 +172,7 @@ window.addEventListener('DOMContentLoaded', () => {
     (existingData.colors || []).forEach(c => addColor(c));
     (existingData.fonts || []).forEach(f => addFont(f));
     (existingData.downloads || []).forEach(d => addDownload(d));
+    (existingData.applications || []).forEach(a => addApplication(a));
   }
   document.getElementById('name').focus();
 });
@@ -182,7 +195,8 @@ function pickFile(fieldId, zoneId, type) {
   currentFileType = type;
   const accept = type === 'image' ? 'image/*' :
                  type === 'pdf' ? '.pdf' :
-                 type === 'svg' ? '.svg,.eps,.pdf,.zip,image/*' : '*';
+                 type === 'svg' ? '.svg,.eps,.pdf,.zip,image/*' :
+                 type === 'font' ? '.otf,.ttf,.woff,.woff2' : '*';
   document.getElementById('fileInput').accept = accept;
   document.getElementById('fileInput').click();
 }
@@ -283,25 +297,60 @@ function collectLogos() {
 }
 
 // ─── Colors ───
+function hexToRgb(hex) {
+  const h = hex.replace('#','');
+  return { r: parseInt(h.slice(0,2),16), g: parseInt(h.slice(2,4),16), b: parseInt(h.slice(4,6),16) };
+}
+function hexToCmyk(hex) {
+  let {r,g,b} = hexToRgb(hex);
+  r/=255; g/=255; b/=255;
+  const k = 1 - Math.max(r,g,b);
+  if (k===1) return '0, 0, 0, 100';
+  return `${Math.round((1-r-k)/(1-k)*100)}, ${Math.round((1-g-k)/(1-k)*100)}, ${Math.round((1-b-k)/(1-k)*100)}, ${Math.round(k*100)}`;
+}
+
 function addColor(data = {}) {
   const el = document.createElement('div');
-  el.className = 'admin-color-item';
-  const hex = data.hex || '#000000';
+  el.className = 'admin-color-item admin-color-item-expanded';
+  const hex = data.hex || '#923C56';
+  const {r,g,b} = hexToRgb(hex);
   el.innerHTML = `
-    <input type="color" class="color-picker" value="${hex}" oninput="syncHex(this)">
-    <input type="text" class="color-hex" value="${hex}" maxlength="7"
-      oninput="syncPicker(this)" placeholder="#000000">
-    <input type="text" class="color-name" value="${data.name || ''}" placeholder="Name (opt.)">
-    <button type="button" class="admin-btn-remove-sm" onclick="this.closest('.admin-color-item').remove()">×</button>`;
+    <div class="color-item-top">
+      <input type="color" class="color-picker" value="${hex}" oninput="onColorChange(this)">
+      <button type="button" class="admin-btn-remove-sm" onclick="this.closest('.admin-color-item').remove()">×</button>
+    </div>
+    <div class="color-item-fields">
+      <div><label class="admin-label-sm">HEX</label>
+        <input type="text" class="color-hex" value="${hex}" maxlength="7" oninput="onHexChange(this)" placeholder="#000000">
+      </div>
+      <div><label class="admin-label-sm">Name</label>
+        <input type="text" class="color-name" value="${data.name || ''}" placeholder="z.B. Burgunder">
+      </div>
+      <div><label class="admin-label-sm">RGB</label>
+        <input type="text" class="color-rgb" value="${data.rgb || r+', '+g+', '+b}" placeholder="R, G, B">
+      </div>
+      <div><label class="admin-label-sm">CMYK</label>
+        <input type="text" class="color-cmyk" value="${data.cmyk || hexToCmyk(hex)}" placeholder="C, M, Y, K">
+      </div>
+    </div>`;
   document.getElementById('colorsContainer').appendChild(el);
 }
 
-function syncHex(picker) {
-  picker.nextElementSibling.value = picker.value;
+function onColorChange(picker) {
+  const item = picker.closest('.admin-color-item');
+  const hex = picker.value;
+  item.querySelector('.color-hex').value = hex;
+  const {r,g,b} = hexToRgb(hex);
+  item.querySelector('.color-rgb').value = `${r}, ${g}, ${b}`;
+  item.querySelector('.color-cmyk').value = hexToCmyk(hex);
 }
-function syncPicker(input) {
+function onHexChange(input) {
   if (/^#[0-9a-fA-F]{6}$/.test(input.value)) {
-    input.previousElementSibling.value = input.value;
+    const item = input.closest('.admin-color-item');
+    item.querySelector('.color-picker').value = input.value;
+    const {r,g,b} = hexToRgb(input.value);
+    item.querySelector('.color-rgb').value = `${r}, ${g}, ${b}`;
+    item.querySelector('.color-cmyk').value = hexToCmyk(input.value);
   }
 }
 
@@ -309,6 +358,8 @@ function collectColors() {
   return [...document.querySelectorAll('.admin-color-item')].map(el => ({
     hex: el.querySelector('.color-hex').value,
     name: el.querySelector('.color-name').value,
+    rgb: el.querySelector('.color-rgb').value,
+    cmyk: el.querySelector('.color-cmyk').value,
   })).filter(c => c.hex);
 }
 
@@ -333,7 +384,7 @@ function addFont(data = {}) {
         <label class="admin-label-sm">Foundry URL</label>
         <input type="url" class="font-url" placeholder="https://..." value="${data.foundryUrl || ''}">
       </div>
-      <div class="admin-field admin-field-full">
+      <div class="admin-field">
         <label class="admin-label-sm">Vorschau-Bild</label>
         <div class="admin-upload-zone admin-upload-zone-sm" id="fontPrev_${i}"
           onclick="pickFile('fontPrevVal_${i}', 'fontPrev_${i}', 'image')">
@@ -342,6 +393,16 @@ function addFont(data = {}) {
             : '<div class="admin-upload-placeholder"><span>Bild hochladen</span></div>'}
         </div>
         <input type="hidden" id="fontPrevVal_${i}" value="${data.preview || ''}">
+      </div>
+      <div class="admin-field">
+        <label class="admin-label-sm">Font-Datei <span style="color:#bbb;font-weight:normal;">(für Live-Vorschau)</span></label>
+        <div class="admin-upload-zone admin-upload-zone-sm" id="fontFile_${i}"
+          onclick="pickFile('fontFileVal_${i}', 'fontFile_${i}', 'font')">
+          ${data.file
+            ? `<div class="admin-file-pill">📄 ${data.file.split('/').pop()}</div>`
+            : '<div class="admin-upload-placeholder"><span>.otf / .ttf / .woff</span></div>'}
+        </div>
+        <input type="hidden" id="fontFileVal_${i}" value="${data.file || ''}">
       </div>
     </div>`;
   document.getElementById('fontsContainer').appendChild(el);
@@ -355,6 +416,7 @@ function collectFonts() {
       description: el.querySelector('.font-desc').value,
       foundryUrl: el.querySelector('.font-url').value,
       preview: document.getElementById(`fontPrevVal_${i}`).value,
+      file: document.getElementById(`fontFileVal_${i}`).value,
     };
   }).filter(f => f.name);
 }
@@ -391,6 +453,38 @@ function collectDownloads() {
   }).filter(d => d.title);
 }
 
+// ─── Applications ───
+let appCount = 0;
+function addApplication(data = {}) {
+  const i = appCount++;
+  const el = document.createElement('div');
+  el.className = 'admin-app-item';
+  el.dataset.index = i;
+  el.innerHTML = `
+    <div class="admin-upload-zone" id="appImg_${i}" style="aspect-ratio:4/3;"
+      onclick="pickFile('appImgVal_${i}', 'appImg_${i}', 'image')">
+      ${data.image
+        ? `<img src="${data.image}" class="admin-upload-preview">`
+        : '<div class="admin-upload-placeholder"><span>Bild hochladen</span><small>JPG, PNG</small></div>'}
+    </div>
+    <input type="hidden" id="appImgVal_${i}" value="${data.image || ''}">
+    <input type="text" class="app-caption" placeholder="Beschriftung (opt.)" value="${data.caption || ''}"
+      style="margin-top:8px;width:100%;box-sizing:border-box;">
+    <button type="button" class="admin-btn-remove" onclick="this.closest('.admin-app-item').remove()"
+      style="margin-top:4px;">Entfernen</button>`;
+  document.getElementById('applicationsContainer').appendChild(el);
+}
+
+function collectApplications() {
+  return [...document.querySelectorAll('.admin-app-item')].map(el => {
+    const i = el.dataset.index;
+    return {
+      image: document.getElementById(`appImgVal_${i}`).value,
+      caption: el.querySelector('.app-caption').value,
+    };
+  }).filter(a => a.image);
+}
+
 // ─── Save ───
 async function saveClient() {
   const btn = document.getElementById('saveBtn');
@@ -408,10 +502,12 @@ async function saveClient() {
     heroImage: document.getElementById('heroImage').value,
     brandlookDescription: document.getElementById('brandlookDescription').value.trim(),
     brandlookPdf: document.getElementById('brandlookPdf').value,
+    password: document.getElementById('password').value.trim(),
     logos: collectLogos(),
     colors: collectColors(),
     fonts: collectFonts(),
     downloads: collectDownloads(),
+    applications: collectApplications(),
   };
 
   if (!payload.name) {

@@ -502,3 +502,220 @@ footer { background-color: var(--accent); color: #fff; padding: 60px 10%; margin
     display: block;
     /* fill: currentColor; wird im HTML gesetzt */
 }
+
+/* ─── COLOR SECTION (new) ─── */
+.color-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+}
+
+.color-card {
+    flex: 1 1 220px;
+    max-width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.color-tints {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.color-tint {
+    border-radius: 50%;
+    position: relative;
+    flex-shrink: 0;
+    cursor: default;
+}
+.color-tint:nth-child(1) { width: 72px; height: 72px; }
+.color-tint:nth-child(2) { width: 58px; height: 58px; }
+.color-tint:nth-child(3) { width: 44px; height: 44px; }
+.color-tint:nth-child(4) { width: 32px; height: 32px; }
+
+.tint-label {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.65rem;
+    color: #aaa;
+    white-space: nowrap;
+    font-family: 'RedHat', sans-serif;
+}
+
+.color-info {
+    padding-top: 16px;
+}
+
+.color-name-display {
+    font-family: 'Boska', serif;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.color-values {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.color-value-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+    border: 1px solid transparent;
+}
+.color-value-row:hover {
+    background: rgba(146, 60, 86, 0.06);
+    border-color: rgba(146, 60, 86, 0.15);
+}
+.color-value-row.copied {
+    background: rgba(146, 60, 86, 0.1);
+}
+
+.color-label {
+    font-size: 0.7rem;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    color: #aaa;
+    min-width: 36px;
+    text-transform: uppercase;
+}
+
+.color-val {
+    font-size: 0.88rem;
+    font-family: 'RedHat', monospace;
+    flex: 1;
+}
+
+.copy-icon {
+    font-size: 0.85rem;
+    opacity: 0;
+    color: var(--accent);
+    transition: opacity 0.15s;
+}
+.color-value-row:hover .copy-icon { opacity: 1; }
+.color-value-row.copied .copy-icon { opacity: 1; }
+
+/* Copy Toast */
+.copy-toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--text-main);
+    color: #fff;
+    padding: 10px 22px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-family: 'RedHat', sans-serif;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 9999;
+}
+.copy-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ─── LOGO BG TOGGLE ─── */
+.logo-bg-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.bg-btn {
+    padding: 6px 16px;
+    border-radius: 50px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    font-family: 'RedHat', sans-serif;
+    font-size: 0.85rem;
+    color: var(--text-main);
+    transition: background 0.2s, color 0.2s;
+}
+.bg-btn.active, .bg-btn:hover {
+    background: var(--text-main);
+    color: #fff;
+    border-color: var(--text-main);
+}
+
+/* ─── APPLICATIONS GRID ─── */
+.applications-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.application-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.application-item img {
+    width: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+    aspect-ratio: 4/3;
+}
+
+.application-caption {
+    font-size: 0.85rem;
+    color: #888;
+    text-align: center;
+    margin: 0;
+    font-family: 'RedHat', sans-serif;
+}
+
+/* ─── FONT LIVE PREVIEW ─── */
+.font-preview-input-wrap {
+    margin-bottom: 32px;
+}
+
+.font-preview-input {
+    width: 100%;
+    max-width: 500px;
+    background: transparent;
+    border: none;
+    border-bottom: 1.5px solid var(--border);
+    outline: none;
+    font-family: 'RedHat', sans-serif;
+    font-size: 1rem;
+    color: var(--text-main);
+    padding: 8px 0;
+}
+.font-preview-input::placeholder { color: #bbb; }
+
+.font-live-preview {
+    font-size: 2.2rem;
+    line-height: 1.3;
+    margin: 20px 0;
+    min-height: 60px;
+    word-break: break-word;
+}
+
+/* ─── MOBILE responsive additions ─── */
+@media (max-width: 900px) {
+    .color-section { gap: 40px; }
+    .color-card { max-width: 100%; }
+    .applications-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+}
+@media (max-width: 600px) {
+    .applications-grid { grid-template-columns: 1fr; }
+    .color-tint:nth-child(1) { width: 60px; height: 60px; }
+    .color-tint:nth-child(2) { width: 48px; height: 48px; }
+    .color-tint:nth-child(3) { width: 36px; height: 36px; }
+    .color-tint:nth-child(4) { width: 26px; height: 26px; }
+}

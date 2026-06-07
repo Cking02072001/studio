@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= client.name %> | Studio</title>
   <link rel="stylesheet" href="/style.css">
+
+  <%# Load custom fonts for live preview %>
+  <% if (client.fonts && client.fonts.some(f => f.file)) { %>
+  <style>
+    <% client.fonts.forEach(function(font, i) { if (font.file) { %>
+    @font-face {
+      font-family: 'brand-font-<%= i %>';
+      src: url('<%= font.file %>');
+    }
+    <% } }); %>
+  </style>
+  <% } %>
 </head>
 <body>
 
@@ -19,6 +31,9 @@
     <div class="close-menu" onclick="toggleMobileMenu()">×</div>
     <div id="mobileLinksContainer"></div>
   </div>
+
+  <%# Copy toast %>
+  <div id="copyToast" class="copy-toast">Kopiert!</div>
 
   <main class="project-main">
 
@@ -51,17 +66,30 @@
 
     <!-- Logos -->
     <% if (client.logos && client.logos.length > 0) { %>
+    <%
+      const primaryColor = (client.colors && client.colors.length > 0) ? client.colors[0].hex : '#272727';
+    %>
     <section class="project-section">
       <h3 id="logos" class="nav-anchor section-title">Logos</h3>
-      <div class="content-grid">
+
+      <div class="logo-bg-toggle">
+        <button class="bg-btn active" data-bg="white" onclick="setLogoBg('white', this)">Weiß</button>
+        <button class="bg-btn" data-bg="black" onclick="setLogoBg('black', this)">Schwarz</button>
+        <button class="bg-btn" data-bg="primary" onclick="setLogoBg('primary', this)"
+          style="background:<%= primaryColor %>;border-color:<%= primaryColor %>;color:#fff;">
+          Primär
+        </button>
+      </div>
+
+      <div class="content-grid" id="logoGrid">
         <% client.logos.forEach(function(logo) { %>
         <div class="content-block">
           <h4 class="sub-title"><%= logo.title %></h4>
-          <% if (logo.image) { %>
-            <div class="logo-display-wrapper">
+          <div class="logo-display-wrapper logo-bg-target" style="background:#fff;border-radius:8px;padding:20px;transition:background 0.3s;">
+            <% if (logo.image) { %>
               <img src="<%= logo.image %>" class="logo-display-img" alt="<%= logo.title %>">
-            </div>
-          <% } %>
+            <% } %>
+          </div>
           <div class="download-group">
             <% if (logo.svg) { %><a href="<%= logo.svg %>" download class="btn-small">SVG</a><% } %>
             <% if (logo.eps) { %><a href="<%= logo.eps %>" download class="btn-small">EPS</a><% } %>
@@ -77,17 +105,57 @@
     <% if (client.colors && client.colors.length > 0) { %>
     <section class="project-section">
       <h3 id="farben" class="nav-anchor section-title">Farben</h3>
-      <div class="color-grid">
-        <% client.colors.forEach(function(color) { %>
-        <div class="color-item">
-          <div class="color-shape" style="color:<%= color.hex %>;">
-            <svg viewBox="0 0 232 232" fill="currentColor">
-              <path d="M115.929 231.858C179.955 231.858 231.858 200.58 231.858 139.115C231.858 77.65 160.633 0 115.929 0C71.2247 0 0 77.65 0 139.115C0 200.58 51.9032 231.858 115.929 231.858Z"
-                <% if (color.hex.toLowerCase() === '#ffffff' || color.hex.toLowerCase() === '#fff' || color.hex.toLowerCase() === '#fbf9f9') { %>stroke="#ddd" stroke-width="4"<% } %> />
-            </svg>
+      <div class="color-section">
+        <% client.colors.forEach(function(color) {
+          const h = color.hex.replace('#','');
+          const r = parseInt(h.slice(0,2),16);
+          const g = parseInt(h.slice(2,4),16);
+          const b = parseInt(h.slice(4,6),16);
+          const rr = (r/255), gg = (g/255), bb = (b/255);
+          const k = 1 - Math.max(rr,gg,bb);
+          const c = k===1 ? 0 : Math.round((1-rr-k)/(1-k)*100);
+          const m = k===1 ? 0 : Math.round((1-gg-k)/(1-k)*100);
+          const y = k===1 ? 0 : Math.round((1-bb-k)/(1-k)*100);
+          const kk = Math.round(k*100);
+          const rgbStr = `${r}, ${g}, ${b}`;
+          const cmykStr = `${c}, ${m}, ${y}, ${kk}`;
+          const isLight = (r*0.299 + g*0.587 + b*0.114) > 180;
+        %>
+        <div class="color-card">
+          <div class="color-tints">
+            <div class="color-tint" style="background:rgba(<%=r%>,<%=g%>,<%=b%>,1)" title="100%">
+              <span class="tint-label">100%</span>
+            </div>
+            <div class="color-tint" style="background:rgba(<%=r%>,<%=g%>,<%=b%>,0.75)" title="75%">
+              <span class="tint-label">75%</span>
+            </div>
+            <div class="color-tint" style="background:rgba(<%=r%>,<%=g%>,<%=b%>,0.5)" title="50%">
+              <span class="tint-label">50%</span>
+            </div>
+            <div class="color-tint" style="background:rgba(<%=r%>,<%=g%>,<%=b%>,0.25)" title="25%">
+              <span class="tint-label">25%</span>
+            </div>
           </div>
-          <span class="color-value"><%= color.hex %></span>
-          <% if (color.name) { %><span style="font-size:0.8rem;color:#888;margin-top:4px;display:block;"><%= color.name %></span><% } %>
+          <div class="color-info">
+            <% if (color.name) { %><div class="color-name-display"><%= color.name %></div><% } %>
+            <div class="color-values">
+              <div class="color-value-row" onclick="copyVal('<%= color.hex %>', this)" title="Klicken zum Kopieren">
+                <span class="color-label">HEX</span>
+                <span class="color-val"><%= color.hex %></span>
+                <span class="copy-icon">⎘</span>
+              </div>
+              <div class="color-value-row" onclick="copyVal('rgb(<%= rgbStr %>)', this)" title="Klicken zum Kopieren">
+                <span class="color-label">RGB</span>
+                <span class="color-val"><%= rgbStr %></span>
+                <span class="copy-icon">⎘</span>
+              </div>
+              <div class="color-value-row" onclick="copyVal('cmyk(<%= cmykStr %>)', this)" title="Klicken zum Kopieren">
+                <span class="color-label">CMYK</span>
+                <span class="color-val"><%= cmykStr %></span>
+                <span class="copy-icon">⎘</span>
+              </div>
+            </div>
+          </div>
         </div>
         <% }); %>
       </div>
@@ -98,13 +166,43 @@
     <% if (client.fonts && client.fonts.length > 0) { %>
     <section class="project-section">
       <h3 id="schriften" class="nav-anchor section-title">Schriften</h3>
+
+      <div class="font-preview-input-wrap">
+        <input type="text" class="font-preview-input" id="fontPreviewText"
+          value="Das ist eine Vorschau" oninput="updateFontPreviews(this.value)"
+          placeholder="Text zum Vorschauen eingeben...">
+      </div>
+
       <div class="content-grid">
-        <% client.fonts.forEach(function(font) { %>
+        <% client.fonts.forEach(function(font, i) { %>
         <div class="content-block" style="text-align:left;">
           <h4 class="sub-title" style="text-align:left;"><%= font.name %></h4>
           <% if (font.description) { %><p><%= font.description %></p><% } %>
-          <% if (font.preview) { %><img src="<%= font.preview %>" class="font-img" alt="<%= font.name %>"><% } %>
+
+          <% if (font.file) { %>
+            <div class="font-live-preview" style="font-family:'brand-font-<%= i %>',serif;font-size:2.2rem;line-height:1.3;margin:20px 0;min-height:60px;">
+              Das ist eine Vorschau
+            </div>
+          <% } else if (font.preview) { %>
+            <img src="<%= font.preview %>" class="font-img" alt="<%= font.name %>">
+          <% } %>
+
           <% if (font.foundryUrl) { %><a href="<%= font.foundryUrl %>" target="_blank" class="btn-small">Zur Foundry</a><% } %>
+        </div>
+        <% }); %>
+      </div>
+    </section>
+    <% } %>
+
+    <!-- Anwendungsbeispiele -->
+    <% if (client.applications && client.applications.length > 0) { %>
+    <section class="project-section">
+      <h3 id="anwendungen" class="nav-anchor section-title">Anwendungen</h3>
+      <div class="applications-grid">
+        <% client.applications.forEach(function(app) { %>
+        <div class="application-item">
+          <img src="<%= app.image %>" alt="<%= app.caption || '' %>">
+          <% if (app.caption) { %><p class="application-caption"><%= app.caption %></p><% } %>
         </div>
         <% }); %>
       </div>
@@ -139,11 +237,11 @@
   </footer>
 
   <script>
+    // Nav links
     const sections = document.querySelectorAll('.nav-anchor');
     const navLeft = document.getElementById('navLeft');
     const navRight = document.getElementById('navRight');
     const mobileContainer = document.getElementById('mobileLinksContainer');
-
     sections.forEach((section, index) => {
       const link = document.createElement('a');
       link.href = '#' + section.id;
@@ -155,7 +253,6 @@
         toggleMobileMenu(false);
       });
       (index < 3 ? navLeft : navRight).appendChild(link);
-
       const ml = link.cloneNode(true);
       ml.className = 'mobile-link';
       ml.addEventListener('click', e => {
@@ -165,11 +262,37 @@
       });
       mobileContainer.appendChild(ml);
     });
-
     function toggleMobileMenu(forceClose) {
       const menu = document.getElementById('mobileMenu');
       if (forceClose === false) menu.classList.remove('open');
       else menu.classList.toggle('open');
+    }
+
+    // Copy to clipboard
+    function copyVal(val, el) {
+      navigator.clipboard.writeText(val).then(() => {
+        const toast = document.getElementById('copyToast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 1800);
+        el.classList.add('copied');
+        setTimeout(() => el.classList.remove('copied'), 1800);
+      });
+    }
+
+    // Logo background toggle
+    const primaryColor = '<%= (client.colors && client.colors.length > 0) ? client.colors[0].hex : "#272727" %>';
+    function setLogoBg(mode, btn) {
+      document.querySelectorAll('.bg-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const bg = mode === 'white' ? '#ffffff' : mode === 'black' ? '#1a1a1a' : primaryColor;
+      document.querySelectorAll('.logo-bg-target').forEach(el => el.style.background = bg);
+    }
+
+    // Font live preview
+    function updateFontPreviews(text) {
+      document.querySelectorAll('.font-live-preview').forEach(el => {
+        el.textContent = text || 'Das ist eine Vorschau';
+      });
     }
   </script>
 

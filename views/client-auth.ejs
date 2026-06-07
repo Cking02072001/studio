@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= client.name %> | Studio</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .auth-wrap {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 380px; max-width: calc(100vw - 40px);
+      text-align: center;
+    }
+    .auth-logo { height: 50px; margin-bottom: 40px; }
+    .auth-title { font-family: 'Boska', serif; font-size: 2.8rem; font-weight: bold; margin: 0 0 8px; }
+    .auth-sub { color: var(--accent); font-family: 'Boska', serif; font-size: 1.1rem; margin: 0 0 40px; }
+    .auth-form { display: flex; flex-direction: column; gap: 14px; }
+    .auth-error { color: var(--accent); font-size: 0.9rem; margin: 0; }
+    .auth-hint { font-size: 0.85rem; color: #aaa; margin-top: 10px; }
+    .auth-hint a { color: var(--text-main); text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="auth-wrap">
+    <a href="/"><img src="/Logo/CK.svg" alt="Studio" class="auth-logo"></a>
+    <h1 class="auth-title"><%= client.name %></h1>
+    <p class="auth-sub"><%= client.category %></p>
+    <% if (error) { %><p class="auth-error"><%= error %></p><% } %>
+    <form method="POST" action="/<%= client.slug %>/auth" class="auth-form">
+      <input type="password" name="password" placeholder="Passwort" autofocus required>
+      <button type="submit">Öffnen</button>
+    </form>
+    <p class="auth-hint">
+      Kein Passwort? <a href="mailto:hi@celina.design">hi@celina.design</a>
+    </p>
+  </div>
+</body>
+</html>
