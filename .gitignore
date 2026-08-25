@@ -1,5 +1,7 @@
 node_modules/
 public/uploads/*
 !public/uploads/.gitkeep
+!public/uploads/anger-alm/
+!public/uploads/anger-alm/**
 .DS_Store
 .env

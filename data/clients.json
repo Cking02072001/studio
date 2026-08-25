@@ -1,19 +1,239 @@
 [
   {
     "slug": "test",
-    "name": "Test",
-    "category": "TEst",
-    "description": "test",
+    "name": "Maison Lena",
+    "category": "Visual Identity & Brandbook",
+    "description": "Maison Lena ist ein österreichisches Interior-Label mit Fokus auf zeitlose Eleganz und handgefertigte Qualität. Die Marke verbindet moderne Ästhetik mit warmen, natürlichen Materialien.",
     "heroImage": "/uploads/1780754839198-image-1780752255574.png",
     "published": true,
     "brandlook": {
-      "description": "",
+      "description": "Das vollständige Brandbook von Maison Lena umfasst alle Gestaltungsregeln, Anwendungsbeispiele und Designprinzipien für eine konsistente Markenkommunikation.",
       "pdf": ""
     },
-    "logos": [],
-    "colors": [],
-    "fonts": [],
-    "downloads": [],
-    "updatedAt": "2026-06-06"
+    "password": "",
+    "logos": [
+      {
+        "title": "Hauptlogo",
+        "image": "/uploads/1780754839198-image-1780752255574.png",
+        "imageDark": "",
+        "svg": "",
+        "eps": "",
+        "png": ""
+      },
+      {
+        "title": "Logo Weiß",
+        "image": "/uploads/1780754839198-image-1780752255574.png",
+        "imageDark": "",
+        "svg": "",
+        "eps": "",
+        "png": ""
+      }
+    ],
+    "colors": [
+      {
+        "hex": "#8B6F5E",
+        "name": "Terracotta",
+        "rgb": "139, 111, 94",
+        "cmyk": "0, 20, 32, 45"
+      },
+      {
+        "hex": "#2C2C2C",
+        "name": "Noir",
+        "rgb": "44, 44, 44",
+        "cmyk": "0, 0, 0, 83"
+      },
+      {
+        "hex": "#F5F0EB",
+        "name": "Linen",
+        "rgb": "245, 240, 235",
+        "cmyk": "0, 2, 4, 4"
+      },
+      {
+        "hex": "#A8967F",
+        "name": "Sand",
+        "rgb": "168, 150, 127",
+        "cmyk": "0, 11, 24, 34"
+      }
+    ],
+    "fonts": [
+      {
+        "name": "Canela",
+        "description": "Primäre Schrift für Headlines und Display-Texte. Elegant und zeitlos.",
+        "foundryUrl": "https://commercialtype.com/catalog/canela",
+        "preview": "",
+        "file": ""
+      },
+      {
+        "name": "Söhne",
+        "description": "Sekundärschrift für Fließtexte, Beschriftungen und UI-Elemente.",
+        "foundryUrl": "https://klim.co.nz/retail-fonts/soehne/",
+        "preview": "",
+        "file": ""
+      }
+    ],
+    "applications": [
+      {
+        "image": "/uploads/1780754839198-image-1780752255574.png",
+        "caption": "Visitenkarten"
+      },
+      {
+        "image": "/uploads/1780754839198-image-1780752255574.png",
+        "caption": "Briefpapier"
+      },
+      {
+        "image": "/uploads/1780754839198-image-1780752255574.png",
+        "caption": "Social Media"
+      },
+      {
+        "image": "/uploads/1780754839198-image-1780752255574.png",
+        "caption": "Verpackung"
+      },
+      {
+        "image": "/uploads/1780754839198-image-1780752255574.png",
+        "caption": "Lookbook Cover"
+      }
+    ],
+    "downloads": [
+      {
+        "title": "Iconset",
+        "file": ""
+      },
+      {
+        "title": "Musterkollektion",
+        "file": ""
+      }
+    ],
+    "updatedAt": "2026-06-09"
+  },
+  {
+    "slug": "anger-alm",
+    "name": "Anger Alm",
+    "category": "Visual Identity & Brandlook",
+    "description": "Die Anger Alm ist ein authentischer alpiner Rückzugsort für Erwachsene. Die Marke verbindet natürliche Ruhe, reduzierte Gestaltung und hochwertige Materialien zu einem warmen, zeitgemäßen Auftritt.",
+    "heroImage": "/uploads/anger-alm/anger-alm-hero.png",
+    "published": true,
+    "brandlook": {
+      "description": "Der Brandlook definiert Logo-Hierarchie, Farbwelt, Typografie und Anwendungen für einen konsistenten Markenauftritt: natürlich, ruhig, erwachsen und hochwertig - ohne alpine Klischees.",
+      "pdf": "/uploads/anger-alm/anger-alm-brandlook.pdf"
+    },
+    "password": "",
+    "logos": [
+      {
+        "title": "Hauptlogo",
+        "image": "/uploads/anger-alm/anger-alm-logo-primary.svg",
+        "imageDark": "/uploads/anger-alm/anger-alm-logo-primary-white.svg",
+        "svg": "/uploads/anger-alm/anger-alm-logo-primary.svg",
+        "eps": "/uploads/anger-alm/anger-alm-logo-primary.eps",
+        "png": "/uploads/anger-alm/anger-alm-logo-primary.png"
+      },
+      {
+        "title": "Signet, Wortmarke & Claim",
+        "image": "/uploads/anger-alm/anger-alm-logo-signet-wordmark-claim.svg",
+        "imageDark": "/uploads/anger-alm/anger-alm-logo-signet-wordmark-claim-white.svg",
+        "svg": "/uploads/anger-alm/anger-alm-logo-signet-wordmark-claim.svg",
+        "eps": "/uploads/anger-alm/anger-alm-logo-signet-wordmark-claim.eps",
+        "png": ""
+      },
+      {
+        "title": "Wortmarke mit Claim",
+        "image": "/uploads/anger-alm/anger-alm-logo-wordmark-claim.svg",
+        "imageDark": "/uploads/anger-alm/anger-alm-logo-wordmark-claim-white.svg",
+        "svg": "/uploads/anger-alm/anger-alm-logo-wordmark-claim.svg",
+        "eps": "/uploads/anger-alm/anger-alm-logo-wordmark-claim.eps",
+        "png": ""
+      },
+      {
+        "title": "Wortmarke",
+        "image": "/uploads/anger-alm/anger-alm-logo-wordmark.svg",
+        "imageDark": "/uploads/anger-alm/anger-alm-logo-wordmark-white.svg",
+        "svg": "/uploads/anger-alm/anger-alm-logo-wordmark.svg",
+        "eps": "/uploads/anger-alm/anger-alm-logo-wordmark.eps",
+        "png": ""
+      },
+      {
+        "title": "Signet",
+        "image": "/uploads/anger-alm/anger-alm-logo-signet.svg",
+        "imageDark": "/uploads/anger-alm/anger-alm-logo-signet-white.svg",
+        "svg": "/uploads/anger-alm/anger-alm-logo-signet.svg",
+        "eps": "/uploads/anger-alm/anger-alm-logo-signet.eps",
+        "png": "/uploads/anger-alm/anger-alm-logo-signet.png"
+      },
+      {
+        "title": "Berg-Icon",
+        "image": "/uploads/anger-alm/anger-alm-icon-mountain.svg",
+        "imageDark": "/uploads/anger-alm/anger-alm-icon-mountain-white.svg",
+        "svg": "/uploads/anger-alm/anger-alm-icon-mountain.svg",
+        "eps": "/uploads/anger-alm/anger-alm-icon-mountain.eps",
+        "png": "/uploads/anger-alm/anger-alm-icon-mountain.png"
+      },
+      {
+        "title": "Berg-Icon im Kreis",
+        "image": "/uploads/anger-alm/anger-alm-icon-mountain-circle.svg",
+        "imageDark": "/uploads/anger-alm/anger-alm-icon-mountain-circle-white.svg",
+        "svg": "/uploads/anger-alm/anger-alm-icon-mountain-circle.svg",
+        "eps": "/uploads/anger-alm/anger-alm-icon-mountain-circle.eps",
+        "png": ""
+      }
+    ],
+    "colors": [
+      {
+        "hex": "#30321D",
+        "name": "Rangitoto",
+        "rgb": "48, 50, 29",
+        "cmyk": "4, 0, 42, 80"
+      },
+      {
+        "hex": "#FDFBF7",
+        "name": "Fluffy White",
+        "rgb": "253, 251, 247",
+        "cmyk": "0, 1, 2, 1"
+      },
+      {
+        "hex": "#AD8B73",
+        "name": "Boho Brown",
+        "rgb": "173, 139, 115",
+        "cmyk": "0, 20, 34, 32"
+      },
+      {
+        "hex": "#C97A45",
+        "name": "Baked Beans",
+        "rgb": "201, 122, 69",
+        "cmyk": "0, 39, 66, 21"
+      },
+      {
+        "hex": "#0B100A",
+        "name": "Marshland",
+        "rgb": "11, 16, 10",
+        "cmyk": "31, 0, 38, 94"
+      }
+    ],
+    "fonts": [
+      {
+        "name": "Newsreader",
+        "description": "Emotionale Markenschrift für große Headlines, Statements und repräsentative Editorial-Elemente.",
+        "foundryUrl": "https://fonts.google.com/specimen/Newsreader",
+        "preview": "/uploads/anger-alm/anger-alm-font-newsreader.png",
+        "file": ""
+      },
+      {
+        "name": "Bricolage Grotesque",
+        "description": "Funktionale Schrift für Fließtexte, Navigation, Buttons, Labels und kleinere Informationen.",
+        "foundryUrl": "https://fonts.google.com/specimen/Bricolage+Grotesque",
+        "preview": "/uploads/anger-alm/anger-alm-font-bricolage-grotesque.png",
+        "file": ""
+      }
+    ],
+    "applications": [],
+    "downloads": [
+      {
+        "title": "Logo-Paket SVG",
+        "file": "/uploads/anger-alm/anger-alm-logos-svg.zip"
+      },
+      {
+        "title": "Logo-Paket EPS",
+        "file": "/uploads/anger-alm/anger-alm-logos-eps.zip"
+      }
+    ],
+    "updatedAt": "2026-08-25"
   }
 ]

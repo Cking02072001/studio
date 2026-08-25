@@ -87,13 +87,30 @@
           <h4 class="sub-title"><%= logo.title %></h4>
           <div class="logo-display-wrapper logo-bg-target" style="background:#fff;border-radius:8px;padding:20px;transition:background 0.3s;">
             <% if (logo.image) { %>
-              <img src="<%= logo.image %>" class="logo-display-img" alt="<%= logo.title %>">
+              <img
+                src="<%= logo.image %>"
+                data-image="<%= logo.image %>"
+                data-image-dark="<%= logo.imageDark || '' %>"
+                class="logo-display-img"
+                alt="<%= logo.title %>">
             <% } %>
           </div>
           <div class="download-group">
-            <% if (logo.svg) { %><a href="<%= logo.svg %>" download class="btn-small">SVG</a><% } %>
-            <% if (logo.eps) { %><a href="<%= logo.eps %>" download class="btn-small">EPS</a><% } %>
-            <% if (logo.png) { %><a href="<%= logo.png %>" download class="btn-small">PNG</a><% } %>
+            <% if (logo.svg) { %>
+              <a href="<%= logo.svg %>" download class="btn-small">SVG</a>
+            <% } else { %>
+              <span class="btn-small btn-disabled">SVG</span>
+            <% } %>
+            <% if (logo.eps) { %>
+              <a href="<%= logo.eps %>" download class="btn-small">EPS</a>
+            <% } else { %>
+              <span class="btn-small btn-disabled">EPS</span>
+            <% } %>
+            <% if (logo.png) { %>
+              <a href="<%= logo.png %>" download class="btn-small">PNG</a>
+            <% } else { %>
+              <span class="btn-small btn-disabled">PNG</span>
+            <% } %>
           </div>
         </div>
         <% }); %>
@@ -122,20 +139,24 @@
           const isLight = (r*0.299 + g*0.587 + b*0.114) > 180;
         %>
         <div class="color-card">
-          <div class="color-tints">
-            <div class="color-tint" style="background:rgba(<%=r%>,<%=g%>,<%=b%>,1)" title="100%">
-              <span class="tint-label">100%</span>
-            </div>
-            <div class="color-tint" style="background:rgba(<%=r%>,<%=g%>,<%=b%>,0.75)" title="75%">
+          <%# Big main circle %>
+          <div class="color-main-circle" style="background:rgba(<%=r%>,<%=g%>,<%=b%>,1)"></div>
+          <%# Smaller tint circles below %>
+          <div class="color-sub-tints">
+            <div class="color-sub-tint-wrap">
+              <div class="color-sub-tint" style="background:rgba(<%=r%>,<%=g%>,<%=b%>,0.75)"></div>
               <span class="tint-label">75%</span>
             </div>
-            <div class="color-tint" style="background:rgba(<%=r%>,<%=g%>,<%=b%>,0.5)" title="50%">
+            <div class="color-sub-tint-wrap">
+              <div class="color-sub-tint" style="background:rgba(<%=r%>,<%=g%>,<%=b%>,0.5)"></div>
               <span class="tint-label">50%</span>
             </div>
-            <div class="color-tint" style="background:rgba(<%=r%>,<%=g%>,<%=b%>,0.25)" title="25%">
+            <div class="color-sub-tint-wrap">
+              <div class="color-sub-tint" style="background:rgba(<%=r%>,<%=g%>,<%=b%>,0.25)"></div>
               <span class="tint-label">25%</span>
             </div>
           </div>
+          <%# Color info %>
           <div class="color-info">
             <% if (color.name) { %><div class="color-name-display"><%= color.name %></div><% } %>
             <div class="color-values">
@@ -167,27 +188,19 @@
     <section class="project-section">
       <h3 id="schriften" class="nav-anchor section-title">Schriften</h3>
 
-      <div class="font-preview-input-wrap">
-        <input type="text" class="font-preview-input" id="fontPreviewText"
-          value="Das ist eine Vorschau" oninput="updateFontPreviews(this.value)"
-          placeholder="Text zum Vorschauen eingeben...">
-      </div>
-
-      <div class="content-grid">
-        <% client.fonts.forEach(function(font, i) { %>
-        <div class="content-block" style="text-align:left;">
-          <h4 class="sub-title" style="text-align:left;"><%= font.name %></h4>
-          <% if (font.description) { %><p><%= font.description %></p><% } %>
-
-          <% if (font.file) { %>
-            <div class="font-live-preview" style="font-family:'brand-font-<%= i %>',serif;font-size:2.2rem;line-height:1.3;margin:20px 0;min-height:60px;">
-              Das ist eine Vorschau
-            </div>
-          <% } else if (font.preview) { %>
-            <img src="<%= font.preview %>" class="font-img" alt="<%= font.name %>">
+      <div class="fonts-list">
+        <% client.fonts.forEach(function(font) { %>
+        <div class="font-entry">
+          <div class="font-entry-meta">
+            <h4 class="font-entry-name"><%= font.name %></h4>
+            <% if (font.description) { %><p class="font-entry-desc"><%= font.description %></p><% } %>
+            <% if (font.foundryUrl) { %><a href="<%= font.foundryUrl %>" target="_blank" class="btn-small">Zur Foundry</a><% } %>
+          </div>
+          <% if (font.preview) { %>
+          <div class="font-entry-image">
+            <img src="<%= font.preview %>" alt="<%= font.name %> Vorschau">
+          </div>
           <% } %>
-
-          <% if (font.foundryUrl) { %><a href="<%= font.foundryUrl %>" target="_blank" class="btn-small">Zur Foundry</a><% } %>
         </div>
         <% }); %>
       </div>
@@ -286,6 +299,20 @@
       btn.classList.add('active');
       const bg = mode === 'white' ? '#ffffff' : mode === 'black' ? '#1a1a1a' : primaryColor;
       document.querySelectorAll('.logo-bg-target').forEach(el => el.style.background = bg);
+      const showWhiteLogo = mode !== 'white';
+      document.querySelectorAll('.logo-display-img').forEach(img => {
+        const darkSrc = img.dataset.imageDark;
+        if (showWhiteLogo && darkSrc) {
+          img.src = darkSrc;
+          img.style.filter = 'none';
+        } else if (showWhiteLogo) {
+          img.src = img.dataset.image;
+          img.style.filter = 'brightness(0) invert(1)';
+        } else {
+          img.src = img.dataset.image;
+          img.style.filter = 'none';
+        }
+      });
     }
 
     // Font live preview
