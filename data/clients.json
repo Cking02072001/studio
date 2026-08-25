@@ -132,7 +132,7 @@
         "imageDark": "/uploads/anger-alm/anger-alm-logo-signet-wordmark-claim-white.svg",
         "svg": "/uploads/anger-alm/anger-alm-logo-signet-wordmark-claim.svg",
         "eps": "/uploads/anger-alm/anger-alm-logo-signet-wordmark-claim.eps",
-        "png": ""
+        "png": "/uploads/anger-alm/anger-alm-logo-signet-wordmark-claim.png"
       },
       {
         "title": "Wortmarke mit Claim",
@@ -140,7 +140,7 @@
         "imageDark": "/uploads/anger-alm/anger-alm-logo-wordmark-claim-white.svg",
         "svg": "/uploads/anger-alm/anger-alm-logo-wordmark-claim.svg",
         "eps": "/uploads/anger-alm/anger-alm-logo-wordmark-claim.eps",
-        "png": ""
+        "png": "/uploads/anger-alm/anger-alm-logo-wordmark-claim.png"
       },
       {
         "title": "Wortmarke",
@@ -148,7 +148,7 @@
         "imageDark": "/uploads/anger-alm/anger-alm-logo-wordmark-white.svg",
         "svg": "/uploads/anger-alm/anger-alm-logo-wordmark.svg",
         "eps": "/uploads/anger-alm/anger-alm-logo-wordmark.eps",
-        "png": ""
+        "png": "/uploads/anger-alm/anger-alm-logo-wordmark.png"
       },
       {
         "title": "Signet",
@@ -172,7 +172,7 @@
         "imageDark": "/uploads/anger-alm/anger-alm-icon-mountain-circle-white.svg",
         "svg": "/uploads/anger-alm/anger-alm-icon-mountain-circle.svg",
         "eps": "/uploads/anger-alm/anger-alm-icon-mountain-circle.eps",
-        "png": ""
+        "png": "/uploads/anger-alm/anger-alm-icon-mountain-circle.png"
       }
     ],
     "colors": [

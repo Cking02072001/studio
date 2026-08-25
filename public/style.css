@@ -370,15 +370,6 @@ footer { background-color: var(--accent); color: #fff; padding: 60px 10%; margin
 .nav-link:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 4px; }
 
 .nav-logo { height: 40px; width: auto; }
-.burger-menu { display: none; cursor: pointer; font-size: 1.5rem; }
-.mobile-nav-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: var(--bg-color);
-    z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center;
-    transform: translateX(100%); transition: transform 0.4s ease;
-}
-.mobile-nav-overlay.open { transform: translateX(0); }
-.mobile-link { font-size: 1.5rem; margin: 15px 0; font-family: 'Boska', serif; font-weight: bold; cursor: pointer;}
-.close-menu { position: absolute; top: 20px; right: 20px; font-size: 2rem; cursor: pointer;}
 
 .project-main {
     display: block !important; width: 100%; padding: 0 !important; margin: 0 !important; overflow-x: hidden;
@@ -459,7 +450,6 @@ footer { background-color: var(--accent); color: #fff; padding: 60px 10%; margin
 /* Mobile Subpages */
 @media (max-width: 900px) {
     .nav-side { display: none; }
-    .burger-menu { display: block; position: absolute; right: 20px; }
     .project-nav { justify-content: center; }
     .sub-hero { grid-template-columns: 1fr; padding: 40px 5%; text-align: center; }
     .project-section { padding: 40px 5%; }
@@ -527,6 +517,7 @@ footer { background-color: var(--accent); color: #fff; padding: 60px 10%; margin
     border-radius: 50%;
     flex-shrink: 0;
     margin-bottom: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* Row of smaller tint circles */
@@ -549,6 +540,7 @@ footer { background-color: var(--accent); color: #fff; padding: 60px 10%; margin
     height: 44px;
     border-radius: 50%;
     flex-shrink: 0;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .tint-label {
@@ -643,8 +635,9 @@ footer { background-color: var(--accent); color: #fff; padding: 60px 10%; margin
 /* ─── LOGO BG TOGGLE ─── */
 .logo-bg-toggle {
     display: flex;
+    justify-content: center;
     gap: 8px;
-    margin-bottom: 24px;
+    margin-bottom: 48px;
 }
 
 .bg-btn {
@@ -732,6 +725,31 @@ footer { background-color: var(--accent); color: #fff; padding: 60px 10%; margin
     width: 100%;
     border-radius: 8px;
     display: block;
+}
+
+.font-entry-specimen {
+    border-radius: 8px;
+    padding: 48px 40px;
+}
+
+.font-specimen-name {
+    font-size: 2.6rem;
+    line-height: 1.2;
+    margin-bottom: 24px;
+}
+
+.font-specimen-line {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+.font-specimen-line + .font-specimen-line {
+    margin-top: 6px;
+}
+
+.font-specimen-upper {
+    margin-top: 16px;
 }
 
 @media (max-width: 900px) {

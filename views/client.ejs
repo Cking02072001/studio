@@ -17,6 +17,20 @@
     <% } }); %>
   </style>
   <% } %>
+
+  <%# Load Google Fonts for brand font specimens (when no custom file is uploaded) %>
+  <%
+    const googleFontNames = [...new Set(
+      (client.fonts || [])
+        .filter(f => !f.file && f.foundryUrl && f.foundryUrl.includes('fonts.google.com'))
+        .map(f => f.name)
+    )];
+  %>
+  <% if (googleFontNames.length > 0) { %>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?<%= googleFontNames.map(n => 'family=' + encodeURIComponent(n) + ':wght@400;500;600;700').join('&') %>&display=swap" rel="stylesheet">
+  <% } %>
 </head>
 <body>
 
@@ -24,13 +38,7 @@
     <div class="nav-side left" id="navLeft"></div>
     <a href="/"><img src="/Logo/CK.svg" alt="Celina K." class="nav-logo"></a>
     <div class="nav-side right" id="navRight"></div>
-    <div class="burger-menu" onclick="toggleMobileMenu()">☰</div>
   </nav>
-
-  <div class="mobile-nav-overlay" id="mobileMenu">
-    <div class="close-menu" onclick="toggleMobileMenu()">×</div>
-    <div id="mobileLinksContainer"></div>
-  </div>
 
   <%# Copy toast %>
   <div id="copyToast" class="copy-toast">Kopiert!</div>
@@ -188,15 +196,32 @@
     <section class="project-section">
       <h3 id="schriften" class="nav-anchor section-title">Schriften</h3>
 
+      <%
+        const specimenBg = (client.colors && client.colors.length > 0) ? client.colors[0].hex : '#272727';
+        const sbHex = specimenBg.replace('#', '');
+        const sbR = parseInt(sbHex.slice(0, 2), 16), sbG = parseInt(sbHex.slice(2, 4), 16), sbB = parseInt(sbHex.slice(4, 6), 16);
+        const specimenText = (sbR * 0.299 + sbG * 0.587 + sbB * 0.114) > 180 ? '#1a1a1a' : '#ffffff';
+      %>
       <div class="fonts-list">
-        <% client.fonts.forEach(function(font) { %>
+        <% client.fonts.forEach(function(font, i) {
+          let specimenFamily = null;
+          if (font.file) specimenFamily = 'brand-font-' + i;
+          else if (font.foundryUrl && font.foundryUrl.includes('fonts.google.com')) specimenFamily = font.name;
+        %>
         <div class="font-entry">
           <div class="font-entry-meta">
             <h4 class="font-entry-name"><%= font.name %></h4>
             <% if (font.description) { %><p class="font-entry-desc"><%= font.description %></p><% } %>
             <% if (font.foundryUrl) { %><a href="<%= font.foundryUrl %>" target="_blank" class="btn-small">Zur Foundry</a><% } %>
           </div>
-          <% if (font.preview) { %>
+          <% if (specimenFamily) { %>
+          <div class="font-entry-specimen" style="background:<%= specimenBg %>; color:<%= specimenText %>; font-family:'<%= specimenFamily %>', serif;">
+            <div class="font-specimen-name"><%= font.name %></div>
+            <div class="font-specimen-line">abcdefghijklmnopqrstuvwxyz</div>
+            <div class="font-specimen-line">1234567890 &amp;#+-</div>
+            <div class="font-specimen-line font-specimen-upper">ABCDEFGHIJKLMNOPQRSTUVWXYZ</div>
+          </div>
+          <% } else if (font.preview) { %>
           <div class="font-entry-image">
             <img src="<%= font.preview %>" alt="<%= font.name %> Vorschau">
           </div>
@@ -254,7 +279,6 @@
     const sections = document.querySelectorAll('.nav-anchor');
     const navLeft = document.getElementById('navLeft');
     const navRight = document.getElementById('navRight');
-    const mobileContainer = document.getElementById('mobileLinksContainer');
     sections.forEach((section, index) => {
       const link = document.createElement('a');
       link.href = '#' + section.id;
@@ -263,23 +287,9 @@
       link.addEventListener('click', e => {
         e.preventDefault();
         document.getElementById(section.id).scrollIntoView({ behavior: 'smooth' });
-        toggleMobileMenu(false);
       });
       (index < 3 ? navLeft : navRight).appendChild(link);
-      const ml = link.cloneNode(true);
-      ml.className = 'mobile-link';
-      ml.addEventListener('click', e => {
-        e.preventDefault();
-        document.getElementById(section.id).scrollIntoView({ behavior: 'smooth' });
-        toggleMobileMenu();
-      });
-      mobileContainer.appendChild(ml);
     });
-    function toggleMobileMenu(forceClose) {
-      const menu = document.getElementById('mobileMenu');
-      if (forceClose === false) menu.classList.remove('open');
-      else menu.classList.toggle('open');
-    }
 
     // Copy to clipboard
     function copyVal(val, el) {
