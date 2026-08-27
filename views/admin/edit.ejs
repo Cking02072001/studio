@@ -244,7 +244,7 @@ function addLogo(data = {}) {
     </div>
     <div class="admin-logo-item-body">
       <div>
-        <label class="admin-label-sm">Vorschau (PNG/SVG)</label>
+        <label class="admin-label-sm">Vorschau auf Hell</label>
         <div class="admin-upload-zone admin-upload-zone-sm" id="logoImg_${i}"
           onclick="pickFile('logoImgVal_${i}', 'logoImg_${i}', 'image')">
           ${data.image
@@ -252,6 +252,16 @@ function addLogo(data = {}) {
             : '<div class="admin-upload-placeholder"><span>Bild hochladen</span></div>'}
         </div>
         <input type="hidden" id="logoImgVal_${i}" value="${data.image || ''}">
+      </div>
+      <div>
+        <label class="admin-label-sm">Vorschau auf Dunkel</label>
+        <div class="admin-upload-zone admin-upload-zone-sm" id="logoImgDark_${i}"
+          onclick="pickFile('logoImgDarkVal_${i}', 'logoImgDark_${i}', 'image')" style="background:#1a1a1a;">
+          ${data.imageDark
+            ? `<img src="${data.imageDark}" class="admin-upload-preview">`
+            : '<div class="admin-upload-placeholder"><span style="color:#888;">Bild hochladen</span></div>'}
+        </div>
+        <input type="hidden" id="logoImgDarkVal_${i}" value="${data.imageDark || ''}">
       </div>
       <div class="admin-logo-files">
         <div>
@@ -287,11 +297,12 @@ function collectLogos() {
   return [...document.querySelectorAll('.admin-logo-item')].map(el => {
     const i = el.dataset.index;
     return {
-      title: el.querySelector('.logo-title').value,
-      image: document.getElementById(`logoImgVal_${i}`).value,
-      svg:   document.getElementById(`logoSvgVal_${i}`).value,
-      eps:   document.getElementById(`logoEpsVal_${i}`).value,
-      png:   document.getElementById(`logoPngVal_${i}`).value,
+      title:     el.querySelector('.logo-title').value,
+      image:     document.getElementById(`logoImgVal_${i}`).value,
+      imageDark: document.getElementById(`logoImgDarkVal_${i}`).value,
+      svg:       document.getElementById(`logoSvgVal_${i}`).value,
+      eps:       document.getElementById(`logoEpsVal_${i}`).value,
+      png:       document.getElementById(`logoPngVal_${i}`).value,
     };
   }).filter(l => l.title || l.image);
 }
